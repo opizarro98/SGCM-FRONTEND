@@ -2,13 +2,12 @@ package com.ec.sgcm.model;
 
 import org.hibernate.annotations.Comment;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -17,12 +16,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "appointment")
-public class Appointment {
+@Table(name = "appointments")
+public class Appointments {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "appointment_id")
+    @Column(name = "appointments_id")
     @Comment("Id del turno, es un campo autoincrementable")
     private Long id;
 
@@ -38,7 +37,8 @@ public class Appointment {
     @Comment("motivo de la consulta")
     private String description;
 
-    @Comment("Relacion con la persona")
-    @ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Person person;
+    // Relación con Person
+    @ManyToOne
+    @JoinColumn(name = "person_id", nullable = false)
+    private Persons person;
 }

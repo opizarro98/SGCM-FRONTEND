@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ec.sgcm.model.Appointment;
+import com.ec.sgcm.model.Appointments;
 import com.ec.sgcm.services.AppointmentService;
 
 @RestController
@@ -22,7 +22,7 @@ public class AppointmentController {
     @CrossOrigin(origins = "*")
     @PostMapping("/createNewAppointment")
     @ResponseBody
-    public ResponseEntity<Appointment> createNewAppointment(@RequestBody Appointment appointment) {
+    public ResponseEntity<Appointments> createNewAppointment(@RequestBody Appointments appointment) {
         return ResponseEntity.ok().body(appointmentService.createAppointment(appointment));
     }
 }

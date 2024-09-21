@@ -2,13 +2,13 @@ package com.ec.sgcm.model;
 
 import org.hibernate.annotations.Comment;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,12 +16,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "attention")
-public class Attention {
+@Table(name = "attentions")
+public class Attentions {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "history_id")
+    @Column(name = "attentions_id")
     @Comment("Id de la atencion medica, es un campo autoincrementable")
     private Long id;
 
@@ -34,10 +34,17 @@ public class Attention {
     private String currentStatus;
 
     @Column(nullable = false, name = "intersession_task ")
-    @Comment("tareas de intercesion ")
+    @Comment("Tareas que deberia enviar despues de cada atencion medica")
     private String intersessionTask;
 
-    @Comment("Relacion con Diagnostico")
-    @OneToOne(mappedBy = "attention", cascade = CascadeType.ALL)
+    // Relación con History
+    @ManyToOne
+    @JoinColumn(name = "history_id", nullable = false)
+    private Histories history;
+
+    // Relación con Diagnosis
+    @ManyToOne
+    @JoinColumn(name = "diagnosis_id", nullable = false)
     private Diagnosis diagnosis;
+
 }

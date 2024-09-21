@@ -9,21 +9,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ec.sgcm.model.Attentions;
-import com.ec.sgcm.services.AttentionService;
+import com.ec.sgcm.model.Histories;
+import com.ec.sgcm.services.HistorieService;
 
 @RestController
-@RequestMapping("/atentionRest")
-public class AttentionController {
+@RequestMapping("/historieRest")
+public class HistorieController {
 
     @Autowired
-    AttentionService attentionService;
+    HistorieService historieService;
 
     @CrossOrigin(origins = "*")
-    @PostMapping("/createNewAtention")
+    @PostMapping("/createNewHistorie")
     @ResponseBody
-    public ResponseEntity<Attentions> createNewAtention(@RequestBody Attentions antecedents) {
-        return ResponseEntity.ok().body(attentionService.createNewAttentio(antecedents));
+    public ResponseEntity<Histories> createNewHistorie(@RequestBody Histories histories) {
+        return ResponseEntity.ok().body(historieService.createNewHistorie(histories));
     }
-
 }

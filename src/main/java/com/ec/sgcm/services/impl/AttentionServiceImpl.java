@@ -3,7 +3,7 @@ package com.ec.sgcm.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ec.sgcm.model.Attention;
+import com.ec.sgcm.model.Attentions;
 import com.ec.sgcm.repository.AttentionRepo;
 import com.ec.sgcm.services.AttentionService;
 
@@ -14,7 +14,7 @@ public class AttentionServiceImpl implements AttentionService {
     AttentionRepo attentionRepo;
 
     @Override
-    public Attention createNewAttentio(Attention attention) {
+    public Attentions createNewAttentio(Attentions attention) {
         return attentionRepo.save(attention);
     }
 

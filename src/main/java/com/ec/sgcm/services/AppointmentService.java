@@ -1,8 +1,8 @@
 package com.ec.sgcm.services;
 
-import com.ec.sgcm.model.Appointment;
+import com.ec.sgcm.model.Appointments;
 
 public interface AppointmentService {
 
-    Appointment createAppointment(Appointment appointment);
+    Appointments createAppointment(Appointments appointment);
 }

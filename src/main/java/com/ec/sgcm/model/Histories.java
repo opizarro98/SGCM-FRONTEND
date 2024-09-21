@@ -1,7 +1,10 @@
 package com.ec.sgcm.model;
 
+import java.util.List;
+
 import org.hibernate.annotations.Comment;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,22 +20,25 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "antecedents")
-public class Antecedents {
+@Table(name = "histories")
+public class Histories {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "antecedents_id")
-    @Comment("Id de el antecedente de la persona, es un campo autoincrementable")
+    @Column(name = "histories_id")
+    @Comment("Id de la historia clinica, es un campo autoincrementable")
     private Long id;
 
     @Column(nullable = false)
-    @Comment("descripcion del antecedente")
-    private String description;
+    @Comment("")
+    private String identification;
 
     // Relación con Person
     @ManyToOne
     @JoinColumn(name = "person_id", nullable = false)
     private Persons person;
 
+    // Relación con Attention
+    @OneToMany(mappedBy = "history", cascade = CascadeType.ALL)
+    private List<Attentions> attentions;
 }

@@ -1,16 +1,16 @@
 package com.ec.sgcm.services;
 
 import java.util.List;
-import com.ec.sgcm.model.Person;
+import com.ec.sgcm.model.Persons;
 
 public interface PersonService {
 
-    Person createNewPerson(Person person);
+    Persons createNewPerson(Persons person);
 
-    Person updateNewPerson(Person person);
+    Persons updateNewPerson(Persons person);
 
-    List<Person> searchAllPerson();
+    List<Persons> searchAllPerson();
 
-    Person searchPersonByIdentification(String identification);
+    Persons searchPersonByIdentification(String identification);
 
 }

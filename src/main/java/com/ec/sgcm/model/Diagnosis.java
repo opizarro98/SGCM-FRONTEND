@@ -1,12 +1,16 @@
 package com.ec.sgcm.model;
 
+import java.util.List;
+
 import org.hibernate.annotations.Comment;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,4 +34,8 @@ public class Diagnosis {
     @Column(nullable = false)
     @Comment("Nombre del diagnostico")
     private String name;
+
+    // Relación con Attention
+    @OneToMany(mappedBy = "diagnosis", cascade = CascadeType.ALL)
+    private List<Attentions> attentions;
 }
