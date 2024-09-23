@@ -1,5 +1,8 @@
 package com.ec.sgcm.model;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import org.hibernate.annotations.Comment;
 
 import jakarta.persistence.Column;
@@ -27,11 +30,11 @@ public class Appointments {
 
     @Column(nullable = false)
     @Comment("Fecha de la consulta")
-    private String date;
+    private LocalDate date;
 
     @Column(nullable = false)
-    @Comment("hora de la consulta ")
-    private String hour;
+    @Comment("Hora de la consulta")
+    private LocalTime hour;
 
     @Column(nullable = false)
     @Comment("motivo de la consulta")
