@@ -7,5 +7,4 @@ import com.ec.sgcm.model.Antecedents;
 
 @Repository
 public interface AntecedentsRepo extends JpaRepository<Antecedents, Long> {
-
 }

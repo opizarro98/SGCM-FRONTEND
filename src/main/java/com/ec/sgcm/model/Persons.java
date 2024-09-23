@@ -4,17 +4,13 @@ import org.hibernate.annotations.Comment;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import jakarta.persistence.CascadeType;
-
 import java.time.LocalDate;
-import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -50,15 +46,5 @@ public class Persons {
     @Column(nullable = false)
     @Comment("Ocupacion de la persona.")
     private String occupancy;
-
-    // Relaciones
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
-    private List<Appointments> appointments;
-
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
-    private List<Antecedents> antecedents;
-
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
-    private List<Histories> histories;
 
 }
