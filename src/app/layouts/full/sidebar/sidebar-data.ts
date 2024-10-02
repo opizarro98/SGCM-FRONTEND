@@ -2,7 +2,7 @@ import { NavItem } from './nav-item/nav-item';
 
 export const navItems: NavItem[] = [
   {
-    navCap: 'Página principal',
+    navCap: 'Menú del Sistema',
   },
   {
     displayName: 'Página Principal',
@@ -10,19 +10,22 @@ export const navItems: NavItem[] = [
     route: '/dashboard',
   },
   {
+    navCap: 'Agendar Cita',
+  },
+  {
     displayName: 'Citas Médicas',
     iconName: 'rosette',
-    route: '/historiaClinica',
+    route: '/sistema/citas',
   },
   {
     displayName: 'Diagnostico',
     iconName: 'poker-chip',
-    route: '/diagnostico',
+    route: '/sistema/diagnostico',
   },
   {
     displayName: 'Historia Médica',
     iconName: 'list',
-    route: '//ui-components/badge',
+    route: '/sistema/historia',
   },
   /*{
     navCap: 'Ui Components',

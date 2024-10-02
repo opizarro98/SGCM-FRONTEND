@@ -27,4 +27,4 @@ import { AppSamplePageComponent } from './sample-page/sample-page.component';
     AppSamplePageComponent
   ],
 })
-export class ExtraModule {}
+export class ExtraModule { }

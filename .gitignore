@@ -1,0 +1,7 @@
+sistema/node_modules/
+sistema/dist/
+sistema/package-lock.json
+.vscode
+node_modules
+.angular
+
