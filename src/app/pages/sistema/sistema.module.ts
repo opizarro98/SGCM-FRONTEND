@@ -15,6 +15,9 @@ import { DiagnosticoComponent } from './diagnostico/diagnostico.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 @NgModule({
@@ -27,7 +30,10 @@ import { MatPaginator } from '@angular/material/paginator';
     TablerIconsModule.pick(TablerIcons),
     MatButtonModule,
     MatDialogModule,
-    MatPaginator
+    MatPaginator,
+    MatDatepickerModule, 
+    MatNativeDateModule,
+    MatDividerModule,
   ],
   declarations: [
     CitasComponent,
