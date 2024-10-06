@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +27,7 @@ public class AppointmentController {
     private AppointmentService appointmentService;
 
     // Crear una nueva cita
-    @CrossOrigin(origins = "*")
+
     @PostMapping("/createNewAppointment")
     @ResponseBody
     public ResponseEntity<?> createNewAppointment(@RequestBody Appointments appointment) {
@@ -47,7 +46,7 @@ public class AppointmentController {
     }
 
     // Actualizar una cita existente
-    @CrossOrigin(origins = "*")
+
     @PutMapping("/updateAppointment")
     @ResponseBody
     public ResponseEntity<?> updateAppointment(@RequestBody Appointments appointment) {
@@ -66,7 +65,7 @@ public class AppointmentController {
     }
 
     // Obtener todas las citas
-    @CrossOrigin(origins = "*")
+
     @GetMapping("/getAllAppointments")
     @ResponseBody
     public ResponseEntity<?> getAllAppointments() {
@@ -81,7 +80,7 @@ public class AppointmentController {
     }
 
     // Obtener una cita por su ID
-    @CrossOrigin(origins = "*")
+
     @GetMapping("/getAppointmentById/{id}")
     @ResponseBody
     public ResponseEntity<?> getAppointmentById(@PathVariable Long id) {
@@ -100,7 +99,7 @@ public class AppointmentController {
     }
 
     // Eliminar una cita por su ID
-    @CrossOrigin(origins = "*")
+
     @DeleteMapping("/deleteAppointment/{id}")
     @ResponseBody
     public ResponseEntity<?> deleteAppointment(@PathVariable Long id) {

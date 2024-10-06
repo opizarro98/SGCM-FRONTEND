@@ -1,40 +1,40 @@
 package com.ec.sgcm.model;
 
-import org.hibernate.annotations.Comment;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import jakarta.persistence.Id;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "antecedents")
-public class Antecedents {
+@Table(name = "users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "antecedents_id")
-    @Comment("Id de el antecedente de la persona, es un campo autoincrementable")
+    @Column(name = "user_id")
     private Long id;
 
-    @Column(nullable = false)
-    @Comment("descripcion del antecedente")
-    private String description;
+    @Column(nullable = false, unique = true)
+    private String username;
 
-    // Relación con Person
-    @ManyToOne
+    @Column(nullable = false)
+    private String password;
+
+    // Relación con Persons
+    @OneToOne
     @JoinColumn(name = "person_id", nullable = false)
-    @JsonBackReference
     private Persons person;
 
+    public void setPassword(String password) {
+        this.password = new BCryptPasswordEncoder().encode(password);
+    }
 }

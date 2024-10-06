@@ -2,7 +2,6 @@ package com.ec.sgcm.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,35 +24,30 @@ public class AntecedentsController {
     @Autowired
     AntecedentsService antecedentsService;
 
-    @CrossOrigin(origins = "*")
     @PostMapping("/createNewAntecedent")
     @ResponseBody
     public ResponseEntity<Antecedents> createNewAntecedent(@RequestBody Antecedents antecedents) {
         return ResponseEntity.ok().body(antecedentsService.createNewAntecedent(antecedents));
     }
 
-    @CrossOrigin(origins = "*")
     @PutMapping("/updateAntecedent")
     @ResponseBody
     public ResponseEntity<Antecedents> updateAntecedent(@RequestBody Antecedents antecedents) {
         return ResponseEntity.ok().body(antecedentsService.updateAntecedent(antecedents));
     }
 
-    @CrossOrigin(origins = "*")
     @GetMapping("/getAllAntecedents")
     @ResponseBody
     public ResponseEntity<List<Antecedents>> getAllAntecedents() {
         return ResponseEntity.ok().body(antecedentsService.getAllAntecedents());
     }
 
-    @CrossOrigin(origins = "*")
     @GetMapping("/getAntecedentById/{id}")
     @ResponseBody
     public ResponseEntity<Antecedents> getAntecedentById(@PathVariable Long id) {
         return ResponseEntity.ok().body(antecedentsService.getAntecedentById(id));
     }
 
-    @CrossOrigin(origins = "*")
     @DeleteMapping("/deleteAntecedent/{id}")
     @ResponseBody
     public ResponseEntity<Void> deleteAntecedent(@PathVariable Long id) {
