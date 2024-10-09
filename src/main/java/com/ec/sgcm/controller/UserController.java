@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ec.sgcm.model.User;
+import com.ec.sgcm.model.dto.loginCredentialsDTO;
 import com.ec.sgcm.services.UserService;
 
 @RestController
@@ -24,8 +25,16 @@ public class UserController {
         return ResponseEntity.ok(userService.createNewUser(user));
     }
 
-    @GetMapping("/findUserByUsername/{username}")
-    public ResponseEntity<User> findUserByUsername(@PathVariable String username) {
-        return ResponseEntity.ok(userService.findUserByUsername(username));
+    // @GetMapping("/findUserByUsername/{username}")
+    // public ResponseEntity<User> findUserByUsername(@PathVariable String username)
+    // {
+    // return ResponseEntity.ok(userService.findUserByUsername(username));
+    // }
+
+    @GetMapping("/loginToSystem")
+    public ResponseEntity<User> loginToSystem(@RequestBody loginCredentialsDTO loginCredentialsDTO) {
+        return ResponseEntity.ok(
+                userService.findUserByUsername(loginCredentialsDTO.getUsername(), loginCredentialsDTO.getPassword()));
     }
+
 }

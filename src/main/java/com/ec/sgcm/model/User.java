@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.Id;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Getter
 @Setter
@@ -34,7 +34,9 @@ public class User {
     @JoinColumn(name = "person_id", nullable = false)
     private Persons person;
 
-    public void setPassword(String password) {
-        this.password = new BCryptPasswordEncoder().encode(password);
-    }
+    /*
+     * public void setPassword(String password) {
+     * this.password = new BCryptPasswordEncoder().encode(password);
+     * }
+     */
 }

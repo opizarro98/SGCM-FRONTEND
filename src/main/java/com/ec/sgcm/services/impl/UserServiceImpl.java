@@ -7,6 +7,8 @@ import com.ec.sgcm.model.User;
 import com.ec.sgcm.repository.UserRepo;
 import com.ec.sgcm.services.UserService;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -20,7 +22,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserByUsername(String username) {
-        return userRepo.findByUsername(username);
+    public User findUserByUsername(String username, String password) {
+        User usertoLogin = userRepo.findByUsername(username);
+        if (usertoLogin != null) {
+            if (usertoLogin.getPassword().equals(password)) {
+                return usertoLogin;
+            }
+            throw new EntityNotFoundException("Invalid password");
+        }
+        throw new EntityNotFoundException("ivalid user and pasword");
     }
 }

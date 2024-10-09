@@ -6,6 +6,6 @@ public interface UserService {
 
     public User createNewUser(User user);
 
-    public User findUserByUsername(String username);
+    public User findUserByUsername(String username, String password);
 
 }
