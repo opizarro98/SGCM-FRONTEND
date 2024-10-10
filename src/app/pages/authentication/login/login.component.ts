@@ -1,6 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Logindto } from 'src/externalService/model/logindto';
+import { LoginService } from 'src/externalService/service/LoginService';
 
 @Component({
   selector: 'app-login',
@@ -9,35 +11,26 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class AppSideLoginComponent {
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(private fb: FormBuilder, private loginService: LoginService) {
     this.loginForm = this.fb.group({
-      usuario: ['', Validators.required],
-      contrasena: ['', Validators.required]
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required]]
     });
   }
 
   onLogin() {
     if (this.loginForm.valid) {
-      const loginData = this.loginForm.value;
-
-      // Codificar las credenciales en Base64
-      const credentials = btoa(`${loginData.usuario}:${loginData.contrasena}`);
-
-      // Establecer las cabeceras de la solicitud
-      const headers = new HttpHeaders({
-        'Authorization': `Basic ${credentials}`
+      const loginData: Logindto = this.loginForm.value;
+      this.loginService.login(loginData).subscribe({
+        next: (response) => {
+          // Maneja el éxito del login
+          console.log('Usuario logueado', response);
+        },
+        error: (err) => {
+          // Maneja errores
+          console.error('Error en el login', err);
+        }
       });
-
-      console.log(credentials + 'asdasdadasdsad');
-      // Realizar la solicitud GET a tu endpoint
-      this.http.get('http://localhost:8081/api/auth/login', { headers })
-        .subscribe(response => {
-          // Manejo de respuesta aquí
-          console.log('Login successful', response);
-        }, error => {
-          // Manejo de error aquí
-          console.error('Login failed', error);
-        });
     }
   }
 }

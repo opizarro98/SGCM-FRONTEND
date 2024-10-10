@@ -15,19 +15,22 @@
           </div>
 
           <div class="or-border m-t-30">----------</div>
-          <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="m-t-30">
-            <!-- Usuario -->
-            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Usuario</mat-label>
-            <mat-form-field appearance="outline" class="w-100" color="primary">
-              <input matInput formControlName="usuario" />
-            </mat-form-field>
-            <!-- contraseña -->
-            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Contraseña</mat-label>
-            <mat-form-field appearance="outline" class="w-100" color="primary">
-              <input matInput type="password" formControlName="contrasena" />
-            </mat-form-field>
-            <button mat-flat-button color="primary" class="w-100" type="submit" (click)="onLogin()">Iniciar Sesión</button>
-          </form>
+            <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+              <!-- Usuario -->
+              <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Usuario</mat-label>
+              <mat-form-field appearance="outline" class="w-100" color="primary">
+                <input matInput formControlName="username" />
+              </mat-form-field>
+            
+              <!-- Contraseña -->
+              <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Contraseña</mat-label>
+              <mat-form-field appearance="outline" class="w-100" color="primary">
+                <input matInput formControlName="password" type="password" />
+              </mat-form-field>
+            
+              <button mat-flat-button color="primary" class="w-100" type="submit">Iniciar Sesión</button>
+            </form>
+
 
           <span class="d-block f-w-500 text-center m-t-24"> © Software Oscar Pizarro
           </span>
