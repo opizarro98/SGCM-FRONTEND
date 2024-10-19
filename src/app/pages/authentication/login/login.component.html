@@ -1,38 +1,36 @@
 <div class="blank-layout-container justify-content-center align-items-center bg-light-primary">
-  <div
-    class="position-relative row w-100 h-100 bg-gredient justify-content-center"
-  >
+  <div class="position-relative row w-100 h-100 bg-gredient justify-content-center">
     <div class="col-lg-4 d-flex align-items-center">
       <mat-card class="cardWithShadow boxed-auth">
         <mat-card-content class="p-32">
           <div class="text-center">
             <a>
-              <img
-                src="./assets/images/logos/dark-logo.svg"
-                class="align-middle m-2"
-                alt="logo"/>
+              <img src="./assets/images/logos/dark-logo.svg" class="align-middle m-2" alt="logo" />
             </a>
           </div>
 
           <div class="or-border m-t-30">----------</div>
-            <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
-              <!-- Usuario -->
-              <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Usuario</mat-label>
-              <mat-form-field appearance="outline" class="w-100" color="primary">
-                <input matInput formControlName="username" />
-              </mat-form-field>
-            
-              <!-- Contraseña -->
-              <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Contraseña</mat-label>
-              <mat-form-field appearance="outline" class="w-100" color="primary">
-                <input matInput formControlName="password" type="password" />
-              </mat-form-field>
-            
-              <button mat-flat-button color="primary" class="w-100" type="submit">Iniciar Sesión</button>
-            </form>
 
+          <form [formGroup]="loginForm" (ngSubmit)="login()">
+            <!-- Usuario -->
+            <mat-form-field appearance="outline" class="w-100" color="primary">
+              <input matInput formControlName="username" placeholder="Usuario" />
+              <small *ngIf="username?.errors?.['required'] && username?.touched">El usuario es requerido.</small>
+            </mat-form-field>
 
-          <span class="d-block f-w-500 text-center m-t-24"> © Software Oscar Pizarro
+            <!-- Contraseña -->
+            <mat-form-field appearance="outline" class="w-100" color="primary">
+              <input matInput formControlName="password" type="password" placeholder="Contraseña" />
+              <small *ngIf="password?.errors?.['required'] && password?.touched">La contraseña es requerida.</small>
+            </mat-form-field>
+
+            <button mat-flat-button color="primary" class="w-100" type="submit">
+              Iniciar Sesión
+            </button>
+          </form>
+
+          <span class="d-block f-w-500 text-center m-t-24">
+            © Software Oscar Pizarro
           </span>
         </mat-card-content>
       </mat-card>

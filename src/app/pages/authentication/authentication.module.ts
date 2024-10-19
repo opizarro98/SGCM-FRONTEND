@@ -14,8 +14,9 @@ import * as TablerIcons from 'angular-tabler-icons/icons';
 
 import { AuthenticationRoutes } from './authentication.routing';
 
-import { AppSideLoginComponent } from './login/login.component';
 import { AppSideRegisterComponent } from './register/register.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import {AppSideLoginComponent} from './login/login.component';
 
 @NgModule({
   imports: [
@@ -29,6 +30,7 @@ import { AppSideRegisterComponent } from './register/register.component';
     FormsModule,
     ReactiveFormsModule,
     TablerIconsModule.pick(TablerIcons),
+    MatFormFieldModule,
   ],
   declarations: [
     AppSideLoginComponent,

@@ -12,14 +12,17 @@ export const SistemaRoutes: Routes = [
       {
         path: 'citas',
         component: CitasComponent,
+        
       },
       {
         path: 'historia',
         component: HistoriaComponent,
+        
       },
       {
         path: 'diagnostico',
         component: DiagnosticoComponent,
+        
       },
     ],
   },
