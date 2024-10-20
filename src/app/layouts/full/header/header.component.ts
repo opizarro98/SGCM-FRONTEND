@@ -6,6 +6,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import {LoginService} from 'src/externalService/service/login/login.service';
 
 
 @Component({
@@ -22,5 +23,9 @@ export class HeaderComponent {
 
   showFiller = false;
 
-  constructor(public dialog: MatDialog) {}
+  logout(){
+    this.loginService.logout();
+  }
+
+  constructor(public dialog: MatDialog, private loginService: LoginService) {}
 }
