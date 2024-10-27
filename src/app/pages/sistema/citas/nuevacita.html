@@ -10,7 +10,8 @@
                 </mat-form-field>
             </div>
             <div class="col-12 col-md-5">
-                <button mat-stroked-button class="w-100 d-flex align-items-center" color="primary">
+                <button mat-stroked-button class="w-100 d-flex align-items-center" color="primary"
+                    (click)="buscarPersona()">
                     <div class="d-flex align-items-center">
                         <img src="/assets/icon/search.svg" alt="Buscar" width="20" class="m-r-4" />
                         Buscar
@@ -29,7 +30,7 @@
             <div class="col-12 col-md-6">
                 <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Apellidos</mat-label>
                 <mat-form-field appearance="outline" class="w-100" color="primary">
-                    <input matInput formControlName="apellido" />
+                    <input matInput formControlName="apellido"  />
                 </mat-form-field>
             </div>
         </div>
@@ -38,15 +39,15 @@
             <div class="col-12 col-md-6">
                 <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Fecha de nacimiento</mat-label>
                 <mat-form-field appearance="outline" class="w-100" color="primary">
-                    <input matInput [matDatepicker]="pickerFecha" formControlName="fechaNacimiento" />
-                    <mat-datepicker-toggle matSuffix [for]="pickerFecha"></mat-datepicker-toggle>
-                    <mat-datepicker #pickerFecha></mat-datepicker>
+                    <input matInput [matDatepicker]="pickerFechaNacimiento" formControlName="fechaNacimiento" />
+                    <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimiento"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerFechaNacimiento></mat-datepicker>
                 </mat-form-field>
             </div>
             <div class="col-12 col-md-6">
                 <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Ocupación</mat-label>
                 <mat-form-field appearance="outline" class="w-100" color="primary">
-                    <input matInput formControlName="ocupacion" />
+                    <input matInput formControlName="ocupacion"  />
                 </mat-form-field>
             </div>
         </div>
@@ -55,9 +56,9 @@
             <div class="col-12 col-md-6">
                 <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Fecha de consulta</mat-label>
                 <mat-form-field appearance="outline" class="w-100" color="primary">
-                    <input matInput [matDatepicker]="pickerFecha" formControlName="fecha" />
-                    <mat-datepicker-toggle matSuffix [for]="pickerFecha"></mat-datepicker-toggle>
-                    <mat-datepicker #pickerFecha></mat-datepicker>
+                    <input matInput [matDatepicker]="pickerFechaConsulta"  formControlName="fecha" />
+                    <mat-datepicker-toggle matSuffix [for]="pickerFechaConsulta"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerFechaConsulta></mat-datepicker>
                 </mat-form-field>
             </div>
             <div class="col-12 col-md-6">
@@ -81,7 +82,7 @@
 <mat-divider></mat-divider>
 <mat-dialog-actions align="center">
     <mat-card-content>
-    <button mat-flat-button color="warn" mat-dialog-close>Cancelar</button>
-    <button mat-button mat-flat-button color="primary" [mat-dialog-close]="true" cdkFocusInitial>Agendar</button>
+        <button mat-flat-button color="warn" mat-dialog-close>Cancelar</button>
+        <button mat-button mat-flat-button color="primary" (click)="onSubmit()">Agendar</button>
     </mat-card-content>
 </mat-dialog-actions>

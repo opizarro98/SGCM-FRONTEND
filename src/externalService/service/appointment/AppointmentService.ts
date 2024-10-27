@@ -8,12 +8,12 @@ import { environment } from 'src/enviroments/environment';
 })
 export class AppointmentService {
   
-  private apiUrl = environment.urlHost + 'appointmentRest/getAllAppointments';
+  private apiUrl = environment.urlHost + 'appointmentRest/';
 
   constructor(private http: HttpClient) {}
 
   // Método para obtener todas las citas
   getAppointments(): Observable<any> {
-    return this.http.get<any>(this.apiUrl);
+    return this.http.get<any>(this.apiUrl+"getAllAppointments");
   }
 }
