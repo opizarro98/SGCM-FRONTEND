@@ -1,6 +1,8 @@
+import { Person } from "../person/Person";
+
 export interface Appointment {
-  id: number;
   date: string;
   hour: string;
   description: string;
+  person: Person;
 }

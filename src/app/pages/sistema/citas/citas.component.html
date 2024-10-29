@@ -20,36 +20,38 @@
                             <!-- Añadido para hacer la tabla desplazable en pantallas pequeñas -->
                             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
                             
-                                <!-- ID Column -->
-                                <ng-container matColumnDef="id">
-                                    <th mat-header-cell *matHeaderCellDef> ID </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+                                <!-- Nombre del Paciente -->
+                                <ng-container matColumnDef="patientname">
+                                    <th mat-header-cell *matHeaderCellDef> Nombre del Paciente </th>
+                                    <td mat-cell *matCellDef="let appointment"> {{appointment.patientname}} </td>
                                 </ng-container>
                             
-                                <!-- Date Column -->
+                                <!-- Fecha -->
                                 <ng-container matColumnDef="date">
                                     <th mat-header-cell *matHeaderCellDef> Fecha </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+                                    <td mat-cell *matCellDef="let appointment"> {{appointment.date}} </td>
                                 </ng-container>
                             
-                                <!-- Hour Column -->
+                                <!-- Hora -->
                                 <ng-container matColumnDef="hour">
                                     <th mat-header-cell *matHeaderCellDef> Hora </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.hour}} </td>
+                                    <td mat-cell *matCellDef="let appointment"> {{appointment.hour}} </td>
                                 </ng-container>
                             
-                                <!-- Description Column -->
+                                <!-- Descripción -->
                                 <ng-container matColumnDef="description">
                                     <th mat-header-cell *matHeaderCellDef> Descripción </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+                                    <td mat-cell *matCellDef="let appointment"> {{appointment.description}} </td>
                                 </ng-container>
                             
+                                <!-- Encabezado de tabla -->
                                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <!-- Fila de datos -->
                                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                             </table>
                         </div>
 
-                        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                        <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons
                             aria-label="Select page of periodic elements">
                         </mat-paginator>
                     </mat-card-content>

@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
@@ -12,11 +12,12 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { AppointmentService } from 'src/externalService/service/appointment/AppointmentService';
-import { Appointment } from 'src/externalService/model/appointment/Appointment';
 import { PersonService } from 'src/externalService/service/person/PersonService';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Person } from 'src/externalService/model/person/Person';
 import { formatDate } from '@angular/common';
+import { Appointment } from 'src/externalService/model/appointment/Appointment';
+import { AppointmentListDTO } from 'src/externalService/model/appointment/AppintmentListDTO';
 
 
 @Component({
@@ -26,8 +27,8 @@ import { formatDate } from '@angular/common';
 })
 
 export class CitasComponent implements AfterViewInit {
-  displayedColumns: string[] = ['id', 'date', 'hour', 'description'];
-  dataSource = new MatTableDataSource<Appointment>();
+  displayedColumns: string[] = ['patientname', 'date', 'hour', 'description'];
+  dataSource = new MatTableDataSource<AppointmentListDTO>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -49,7 +50,9 @@ export class CitasComponent implements AfterViewInit {
     const dialogRef = this.dialog.open(NuevaCitaDialog);
 
     dialogRef.afterClosed().subscribe((result: any | null) => {
-      console.log(`Dialog result: ${result}`);
+      if (result) {
+        this.loadAppointments(); // Actualiza la tabla si se registró la cita correctamente
+      }
     });
   }
 
@@ -77,11 +80,15 @@ export class NuevaCitaDialog {
   isFormEnabled : boolean = false;
   isUserRegistered: boolean = false;
   token: string | null = null;// Reemplaza con el token correcto
+  foundPerson: Person | null = null;
 
   constructor(
     private fb: FormBuilder,
     private personService: PersonService,
     private snackBar: MatSnackBar, // Para mostrar notificaciones 
+    private appointmentService:  AppointmentService,
+    private dialogRef: MatDialogRef<NuevaCitaDialog>,
+    
   ) {
     this.token = localStorage.getItem('token');
     this.citaForm = this.fb.group({
@@ -101,10 +108,10 @@ export class NuevaCitaDialog {
       apellido: [{ value: '', disabled: true }, Validators.required],
       fechaNacimiento: [{ value: '', disabled: true }, Validators.required],
       ocupacion: [{ value: '', disabled: true }, Validators.required],
-      fecha: [{ value: '', disabled: true }, Validators.required],
-      hora: [{ value: '', disabled: true }, Validators.required],
-      motivoConsulta: [{ value: '', disabled: true }, Validators.required],
+      fecha: [{ value: '' }, Validators.required],
+      hora: [{ value: ''}, Validators.required],
     });
+
     
   }
 
@@ -118,13 +125,17 @@ export class NuevaCitaDialog {
     this.personService.getPersonByIdentification(cedula).subscribe({
       next: (person: Person) => {
         // Usuario encontrado, llenamos el formulario
+        this.foundPerson = person;
         this.isUserRegistered = true;
         this.citaForm.patchValue({
           nombre: person.first_name,
           apellido: person.last_name,
           fechaNacimiento: person.birth_date,
-          ocupacion: person.occupancy
+          ocupacion: person.occupancy,
+          fecha: new Date(),
+          motivoConsulta: ''
         });
+        
       },
       error: (error) => {
          this.isUserRegistered = false;
@@ -132,6 +143,7 @@ export class NuevaCitaDialog {
           this.isFormEnabled =true;
           this.citaForm.enable();
           this.snackBar.open('Usuario no registrado', 'Cerrar', { duration: 3000 });
+          this.foundPerson = null;
         // if (error === 'Error interno del servidor') {
         //   // Usuario no registrado, habilitamos el formulario
         //  // Habilita el formulario para llenar los datos
@@ -143,49 +155,67 @@ export class NuevaCitaDialog {
   }
 
   onSubmit() {
+  if (!this.token) {
+    this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
+    return;
+  }
+
+  if (!this.isUserRegistered) {
+    const newPerson: Person = {
+      id: '',
+      identification: this.citaForm.get('cedula')?.value,
+      first_name: this.citaForm.get('nombre')?.value,
+      last_name: this.citaForm.get('apellido')?.value,
+      birth_date: formatDate(this.citaForm.get('fechaNacimiento')?.value, 'yyyy-MM-dd', "en-US"),
+      occupancy: this.citaForm.get('ocupacion')?.value
+    };
+    this.personService.createPerson(newPerson, this.token).subscribe({
+      next: () => {
+        this.personService.getPersonByIdentification(newPerson.identification).subscribe({
+          next: (person) => {
+            this.foundPerson = person;
+            this.registrarCita(person);
+          },
+          error: () => {
+            this.snackBar.open('Error al buscar la persona recién creada.', 'Cerrar', { duration: 3000 });
+          }
+        });
+      },
+      error: () => {
+        this.snackBar.open("Error al registrar la persona. Consulte al Administrador.", 'Cerrar', { duration: 3000 });
+      }
+    });
+    } else {
+      if (!this.foundPerson) {
+        this.snackBar.open('Error: no se ha encontrado una persona registrada para esta cita.', 'Cerrar', { duration: 3000 });
+        return;
+      }
+      this.registrarCita(this.foundPerson);
+      this.snackBar.open('Se ha agendado correctamente la cita', 'Cerrar', { duration: 3000 });
+    }
+  }
+
+  registrarCita(person: Person) {
     if (!this.token) {
       this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
       return;
     }
-    if (!this.isUserRegistered) {
-      // Creación de nueva persona
-      const newPerson: Person = {
-        identification: this.citaForm.get('cedula')?.value,
-        first_name: this.citaForm.get('nombre')?.value,
-        last_name: this.citaForm.get('apellido')?.value,
-        birth_date:formatDate(this.citaForm.get('fechaNacimiento')?.value,'yyyy-MM-dd', "en-US"),
-        occupancy: this.citaForm.get('ocupacion')?.value
-      };
 
-      this.personService.createPerson(newPerson, this.token).subscribe({
-        next: (response) => {
-          this.snackBar.open('Persona registrada exitosamente', 'Cerrar', { duration: 3000 });
-          this.registrarCita(); // Llama a la función para registrar la cita
-        },
-        error: (error) => {
-          this.snackBar.open("Error, al registrar la persona, consulte al Administrador", 'Cerrar', { duration: 3000 });
-        }
-      });
-    } else {
-      // Si el usuario ya existe, registramos la cita directamente
-      this.registrarCita();
-    }
-  }
-
-  registrarCita() {
-    const cita = {
-      fecha: this.citaForm.get('fecha')?.value,
-      hora: this.citaForm.get('hora')?.value,
-      motivo: this.citaForm.get('motivo')?.value,
-      cedula: this.citaForm.get('cedula')?.value // Aquí enlazamos la cita con la persona
+    const newAppointment: Appointment = {
+      date: this.citaForm.get('fecha')?.value,
+      hour: this.citaForm.get('hora')?.value,
+      description: this.citaForm.get('motivoConsulta')?.value,
+      person: person,
     };
 
-    // Aquí deberías llamar al servicio que registre la cita
-    // Ejemplo:
-    // this.citaService.createCita(cita).subscribe({
-    //   next: () => this.snackBar.open('Cita registrada exitosamente', 'Cerrar', { duration: 3000 }),
-    //   error: () => this.snackBar.open('Error al registrar la cita', 'Cerrar', { duration: 3000 })
-    // });
+    this.appointmentService.createAppointment(newAppointment, this.token).subscribe({
+      next: () => {
+        this.snackBar.open('Cita registrada exitosamente', 'Cerrar', { duration: 3000 });
+        this.dialogRef.close(true); // Cierra el diálogo y actualiza la tabla en el componente principal
+      },
+      error: () => this.snackBar.open('Error al registrar la cita', 'Cerrar', { duration: 3000 })
+    });
   }
+
 }
 
