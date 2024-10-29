@@ -2,13 +2,16 @@ package com.ec.sgcm.services.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ec.sgcm.model.Appointments;
+import com.ec.sgcm.model.dto.AppointmentDTO;
 import com.ec.sgcm.repository.AppointmentRepo;
 import com.ec.sgcm.services.AppointmentService;
+import com.ec.sgcm.services.mappers.AppointmentMapper;
 
 @Service
 public class AppointmentServiceImp implements AppointmentService {
@@ -44,8 +47,11 @@ public class AppointmentServiceImp implements AppointmentService {
     }
 
     @Override
-    public List<Appointments> getAllAppointments() {
-        return appointmentRepo.findAll();
+    public List<AppointmentDTO> getAllAppointments() {
+        List<Appointments> appointments = appointmentRepo.findAll();
+        return appointments.stream()
+                .map(AppointmentMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.ec.sgcm.services;
 import java.util.List;
 
 import com.ec.sgcm.model.Appointments;
+import com.ec.sgcm.model.dto.AppointmentDTO;
 
 public interface AppointmentService {
 
@@ -10,7 +11,7 @@ public interface AppointmentService {
 
     Appointments updateAppointment(Appointments appointment);
 
-    List<Appointments> getAllAppointments();
+    List<AppointmentDTO> getAllAppointments();
 
     Appointments getAppointmentById(Long id);
 

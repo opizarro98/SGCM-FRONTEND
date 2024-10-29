@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import com.ec.sgcm.services.PersonService;
 
 @RestController
 @RequestMapping("/personRest")
+@CrossOrigin(origins = { "*" })
 public class PersonController {
 
     @Autowired
@@ -83,7 +85,7 @@ public class PersonController {
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         } catch (Exception ex) {
             ApiErrorResponse errorResponse = new ApiErrorResponse("/personRest/searchPersonByIdentification",
-                    "Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR.value());
+                    "Persona no encontrada", HttpStatus.INTERNAL_SERVER_ERROR.value());
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
