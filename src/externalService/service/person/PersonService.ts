@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import {Observable, catchError, tap, map, throwError} from 'rxjs';
+import { Observable, catchError, tap, map, throwError } from 'rxjs';
 import { environment } from 'src/enviroments/environment';
 import { Person } from 'src/externalService/model/person/Person';
 
@@ -8,10 +8,14 @@ import { Person } from 'src/externalService/model/person/Person';
   providedIn: 'root'
 })
 export class PersonService {
-  
+
   private apiUrl = environment.urlHost + 'personRest/';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
+
+  getPersons(): Observable<any> {
+    return this.http.get<any>(this.apiUrl + "searchForAllPersons");
+  }
 
   createPerson(person: Person, token: string): Observable<any> {
     const headers = new HttpHeaders({
@@ -22,19 +26,19 @@ export class PersonService {
       tap((response) => {
         console.log('Person created successfully:', response);
       }),
-      catchError(this.handleError) 
+      catchError(this.handleError)
     );
   }
 
   getPersonByIdentification(identification: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}searchPersonByIdentification/${identification}`).pipe(
-      catchError(this.handleError) 
+      catchError(this.handleError)
     );
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An unknown error occurred!';
-    
+
     if (error.error instanceof ErrorEvent) {
       // Error del lado del cliente
       errorMessage = `Error: ${error.error.message}`;
@@ -51,7 +55,7 @@ export class PersonService {
           errorMessage = `Error: ${error.message}`;
       }
     }
-    
+
     console.error(errorMessage);
     return throwError(errorMessage);
   }

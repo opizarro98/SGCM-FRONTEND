@@ -1,0 +1,58 @@
+<h2 mat-dialog-title>Registrar Nuevo Paciente</h2>
+<mat-divider></mat-divider>
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]="citaForm">
+        <div class="row">
+            <div class="col-12 col-md-7">
+                <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Cédula</mat-label>
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <input matInput formControlName="cedula" />
+                </mat-form-field>
+            </div>
+            <div class="col-12 col-md-5">
+                <button mat-stroked-button class="w-100 d-flex align-items-center" color="primary"
+                    (click)="buscarPersona()" hidden="true">
+                </button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Nombres</mat-label>
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <input matInput formControlName="nombre" />
+                </mat-form-field>
+            </div>
+            <div class="col-12 col-md-6">
+                <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Apellidos</mat-label>
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <input matInput formControlName="apellido" />
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Fecha de nacimiento</mat-label>
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <input matInput [matDatepicker]="pickerFechaNacimiento" formControlName="fechaNacimiento" />
+                    <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimiento"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerFechaNacimiento></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col-12 col-md-6">
+                <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Ocupación</mat-label>
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <input matInput formControlName="ocupacion" />
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions align="center">
+    <mat-card-content>
+        <button mat-flat-button color="warn" mat-dialog-close>Cancelar</button>
+        <button mat-button mat-flat-button color="primary" (click)="onSubmit()">Agendar</button>
+    </mat-card-content>
+</mat-dialog-actions>
