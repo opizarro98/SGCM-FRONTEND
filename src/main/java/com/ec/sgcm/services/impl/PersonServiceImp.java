@@ -5,9 +5,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.stream.Collectors;
 import com.ec.sgcm.model.Persons;
+import com.ec.sgcm.model.dto.PersonListDTO;
 import com.ec.sgcm.repository.PersonRepo;
 import com.ec.sgcm.services.PersonService;
+import com.ec.sgcm.services.mappers.PersonMapper;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -43,13 +46,11 @@ public class PersonServiceImp implements PersonService {
     }
 
     @Override
-    public List<Persons> searchAllPerson() {
+    public List<PersonListDTO> searchAllPerson() {
         List<Persons> personsList = personRepo.findAll();
-        if (personsList.isEmpty()) {
-            logger.warn("No persons found");
-            throw new EntityNotFoundException("No persons found");
-        }
-        return personsList;
+        return personsList.stream()
+                .map(PersonMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override

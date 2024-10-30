@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ec.sgcm.error.ApiErrorResponse;
 import com.ec.sgcm.model.Persons;
+import com.ec.sgcm.model.dto.PersonListDTO;
 import com.ec.sgcm.services.PersonService;
 
 @RestController
@@ -64,7 +65,7 @@ public class PersonController {
     @ResponseBody
     public ResponseEntity<?> searchForAllPersons() {
         try {
-            List<Persons> personsList = personService.searchAllPerson();
+            List<PersonListDTO> personsList = personService.searchAllPerson();
             return ResponseEntity.ok().body(personsList);
         } catch (Exception ex) {
             ApiErrorResponse errorResponse = new ApiErrorResponse("/personRest/searchForAllPersons",
