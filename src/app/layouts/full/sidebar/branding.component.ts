@@ -9,8 +9,8 @@ import { Component } from '@angular/core';
           src="./assets/images/logos/logosf.png"
           class="align-middle m-2"
           alt="logo"
-          width="160px"
-          height="80px"
+          width="140px"
+          height="60px"
         />
       </a>
     </div>

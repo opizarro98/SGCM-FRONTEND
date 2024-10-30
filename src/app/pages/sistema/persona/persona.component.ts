@@ -18,18 +18,26 @@ import { formatDate } from '@angular/common';
 import { Appointment } from 'src/externalService/model/appointment/Appointment';
 import { AppointmentListDTO } from 'src/externalService/model/appointment/AppintmentListDTO';
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import {PersonListDTO} from '../../../../externalService/model/person/PersonListDTO';
+import { Observable, tap, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-persona',
   templateUrl: './persona.component.html',
 })
 export class PersonaComponent {
-  displayedColumns: string[] = ['id', 'identification', 'first_name', 'last_name', 'birth_date', 'occupancy'];
-  dataSource = new MatTableDataSource<Person>();
+  displayedColumns: string[] = ['identification', 'fullName', 'birth_date', 'occupancy', 'actions'];
+  dataSource = new MatTableDataSource<PersonListDTO>();
+
+  // Mapeo para los filtros de cada columna
+  columnFilters: { [key: string]: string } = {};
+  token: string | null = null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private personService: PersonService, private dialog: MatDialog) { }
+  constructor(private personService: PersonService, private dialog: MatDialog, private snackBar: MatSnackBar,) {
+    this.token = localStorage.getItem('token');
+   }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -42,7 +50,51 @@ export class PersonaComponent {
     });
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 
+  applyColumnFilter(column: string, event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.columnFilters[column] = filterValue;
+
+    this.dataSource.filterPredicate = (data: PersonListDTO, filter: string) => {
+    const dataStr = `${data.identification} ${data.fullName} ${data.birth_date} ${data.occupancy}`.toLowerCase();
+    return dataStr.includes(filter);
+  };
+
+    this.dataSource.filter = ''; // Activar el filtro personalizado
+  }
+
+  // Método para editar una persona
+  editPerson(person: Person) {
+    this.buscarPersona(person.identification).subscribe({
+      next: (personFind: Person) => {
+        const dialogRef = this.dialog.open(NuevaPersonaDialog, {
+          data: { person: personFind }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            // Realizar acciones con los datos editados
+            // Por ejemplo, llamar a un método para actualizar la persona en el backend
+            //this.updatePerson(result);
+          }
+        });
+      },
+      error: (error) => {
+        console.error('Error al buscar la persona:', error);
+      }
+    });
+  }
+
+  // Método para eliminar una persona
+  deletePerson(person: Person) {
+    // Lógica para eliminar a la persona
+  }
+
+  // Metodo para abrir el dialog
   openDialog() {
     const dialogRef = this.dialog.open(NuevaPersonaDialog);
 
@@ -52,6 +104,22 @@ export class PersonaComponent {
       }
     });
   }
+
+  //Metodo para buscar una persona
+  buscarPersona(identification: string): Observable<Person> {
+  if (!this.token) {
+    this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
+    return throwError('Token no encontrado');
+  }
+
+  return this.personService.getPersonByIdentification(identification).pipe(
+    tap((personFind: Person) => {
+      this.snackBar.open('El paciente ya se encuentra registrado', 'Cerrar', { duration: 3000 });
+    })
+  );
+}
+
+
 
 
 }
@@ -73,7 +141,7 @@ export class PersonaComponent {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NuevaPersonaDialog {
-  citaForm: FormGroup;
+  personForm: FormGroup;
   isFormEnabled: boolean = false;
   isUserRegistered: boolean = false;
   token: string | null = null;// Reemplaza con el token correcto
@@ -88,7 +156,7 @@ export class NuevaPersonaDialog {
 
   ) {
     this.token = localStorage.getItem('token');
-    this.citaForm = this.fb.group({
+    this.personForm = this.fb.group({
       cedula: new FormControl(''),
       nombre: new FormControl(''),
       apellido: new FormControl(''),
@@ -96,7 +164,7 @@ export class NuevaPersonaDialog {
       ocupacion: new FormControl('')
     });
 
-    this.citaForm = this.fb.group({
+    this.personForm = this.fb.group({
       cedula: ['', Validators.required],
       nombre: [{ value: '', disabled: true }, Validators.required],
       apellido: [{ value: '', disabled: true }, Validators.required],
@@ -108,7 +176,7 @@ export class NuevaPersonaDialog {
   }
 
   buscarPersona() {
-    const cedula = this.citaForm.get('cedula')?.value;
+    const cedula = this.personForm.get('cedula')?.value;
     if (!this.token) {
       this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
       return;
@@ -120,20 +188,20 @@ export class NuevaPersonaDialog {
         // Usuario encontrado, llenamos el formulario
         this.foundPerson = person;
         this.isUserRegistered = true;
-        this.citaForm.patchValue({
+        this.personForm.patchValue({
           nombre: person.first_name,
           apellido: person.last_name,
           fechaNacimiento: person.birth_date,
           ocupacion: person.occupancy,
         });
-        this.citaForm.disable();
+        this.personForm.disable();
 
       },
       error: (error) => {
         this.isUserRegistered = false;
         this.snackBar.open(error, 'Cerrar', { duration: 3000 });
         this.isFormEnabled = true;
-        this.citaForm.enable();
+        this.personForm.enable();
         this.snackBar.open('Usuario no registrado', 'Cerrar', { duration: 3000 });
         this.foundPerson = null;
       }
@@ -148,11 +216,11 @@ export class NuevaPersonaDialog {
     }
     const newPerson: Person = {
       id: '',
-      identification: this.citaForm.get('cedula')?.value,
-      first_name: this.citaForm.get('nombre')?.value,
-      last_name: this.citaForm.get('apellido')?.value,
-      birth_date: formatDate(this.citaForm.get('fechaNacimiento')?.value, 'yyyy-MM-dd', "en-US"),
-      occupancy: this.citaForm.get('ocupacion')?.value
+      identification: this.personForm.get('cedula')?.value,
+      first_name: this.personForm.get('nombre')?.value,
+      last_name: this.personForm.get('apellido')?.value,
+      birth_date: formatDate(this.personForm.get('fechaNacimiento')?.value, 'yyyy-MM-dd', "en-US"),
+      occupancy: this.personForm.get('ocupacion')?.value
     };
     this.personService.createPerson(newPerson, this.token).subscribe({
       next: () => {

@@ -1,18 +1,13 @@
 <h2 mat-dialog-title>Registrar Nuevo Paciente</h2>
 <mat-divider></mat-divider>
 <mat-dialog-content class="mat-typography">
-    <form [formGroup]="citaForm">
+    <form [formGroup]="personForm">
         <div class="row">
             <div class="col-12 col-md-7">
                 <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Cédula</mat-label>
                 <mat-form-field appearance="outline" class="w-100" color="primary">
-                    <input matInput formControlName="cedula" />
+                    <input matInput formControlName="cedula" (blur)="buscarPersona()" />
                 </mat-form-field>
-            </div>
-            <div class="col-12 col-md-5">
-                <button mat-stroked-button class="w-100 d-flex align-items-center" color="primary"
-                    (click)="buscarPersona()" hidden="true">
-                </button>
             </div>
         </div>
 
@@ -53,6 +48,6 @@
 <mat-dialog-actions align="center">
     <mat-card-content>
         <button mat-flat-button color="warn" mat-dialog-close>Cancelar</button>
-        <button mat-button mat-flat-button color="primary" (click)="onSubmit()">Agendar</button>
+        <button mat-button mat-flat-button color="primary" (click)="onSubmit()">Guardar</button>
     </mat-card-content>
 </mat-dialog-actions>

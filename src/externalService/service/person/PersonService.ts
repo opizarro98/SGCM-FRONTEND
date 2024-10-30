@@ -13,10 +13,13 @@ export class PersonService {
 
   constructor(private http: HttpClient) { }
 
+  // Lista todas las personas
   getPersons(): Observable<any> {
     return this.http.get<any>(this.apiUrl + "searchForAllPersons");
   }
 
+
+  // Crea una nueva persona
   createPerson(person: Person, token: string): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
@@ -30,12 +33,26 @@ export class PersonService {
     );
   }
 
+  // Busca una persona por su identificacion
   getPersonByIdentification(identification: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}searchPersonByIdentification/${identification}`).pipe(
       catchError(this.handleError)
     );
   }
 
+  // Actualiza una persona
+    UpdatePerson(person: Person, token: string): Observable<any> {
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${token}`
+      });
+
+      return this.http.post<any>(`${this.apiUrl}updatePerson`, person, { headers }).pipe(
+        tap((response) => {
+          console.log('Person update successfully:', response);
+        }),
+        catchError(this.handleError)
+      );
+    }
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An unknown error occurred!';
 
