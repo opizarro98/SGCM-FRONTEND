@@ -25,16 +25,17 @@ export const navItems: NavItem[] = [
     iconName: 'rosette',
     route: '/sistema/citas',
   },
+    {
+    displayName: 'Historia Médica',
+    iconName: 'list',
+    route: '/sistema/historia',
+  },
   {
     displayName: 'Diagnostico',
     iconName: 'poker-chip',
     route: '/sistema/diagnostico',
   },
-  {
-    displayName: 'Historia Médica',
-    iconName: 'list',
-    route: '/sistema/historia',
-  },
+
 
   /*{
     navCap: 'Ui Components',
