@@ -31,10 +31,6 @@ public class Histories {
     @Comment("Id de la historia clinica, es un campo autoincrementable")
     private Long id;
 
-    @Column(nullable = false)
-    @Comment("")
-    private String identification;
-
     // Relación con Person
     @ManyToOne
     @JoinColumn(name = "person_id", nullable = false)

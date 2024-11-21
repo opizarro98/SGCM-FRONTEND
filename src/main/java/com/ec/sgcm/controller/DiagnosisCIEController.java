@@ -13,32 +13,33 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import com.ec.sgcm.model.Diagnosis;
-import com.ec.sgcm.services.DiagnosisService;
+import com.ec.sgcm.model.DiagnosisCIE;
+import com.ec.sgcm.model.dto.DiagnosisCIEDTO;
+import com.ec.sgcm.services.DiagnosisCIEService;
 
 @RestController
 @RequestMapping("/diagnosisRest")
 @CrossOrigin(origins = { "*" })
-public class DiagnosisController {
+public class DiagnosisCIEController {
 
     @Autowired
-    DiagnosisService diagnosisService;
+    DiagnosisCIEService diagnosisService;
 
     @PostMapping("/createNewDiagnosis")
     @ResponseBody
-    public ResponseEntity<Diagnosis> createNewDiagnosis(@RequestBody Diagnosis diagnosis) {
+    public ResponseEntity<DiagnosisCIE> createNewDiagnosis(@RequestBody DiagnosisCIE diagnosis) {
         return ResponseEntity.ok().body(diagnosisService.createNewDiagnosis(diagnosis));
     }
 
     @GetMapping("/searchForAllDiagnosis")
     @ResponseBody
-    public ResponseEntity<List<Diagnosis>> searchForAllDiagnosis() {
+    public ResponseEntity<List<DiagnosisCIEDTO>> searchForAllDiagnosis() {
         return ResponseEntity.ok().body(diagnosisService.searchAllDIagnosis());
     }
 
     @GetMapping("/searchDiagnosisForCode/{codeDiagnosis}")
     @ResponseBody
-    public ResponseEntity<Diagnosis> searchDiagnosisForCode(@PathVariable String codeDiagnosis) {
+    public ResponseEntity<DiagnosisCIE> searchDiagnosisForCode(@PathVariable String codeDiagnosis) {
         return ResponseEntity.ok().body(diagnosisService.searchDiagnosisByCode(codeDiagnosis));
     }
 }

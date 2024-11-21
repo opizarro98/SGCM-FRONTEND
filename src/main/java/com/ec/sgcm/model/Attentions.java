@@ -45,6 +45,6 @@ public class Attentions {
     // Relación con Diagnosis
     @ManyToOne
     @JoinColumn(name = "diagnosis_id", nullable = false)
-    private Diagnosis diagnosis;
+    private DiagnosisCIE diagnosis;
 
 }
