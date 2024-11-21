@@ -31,9 +31,17 @@ export const navItems: NavItem[] = [
     route: '/sistema/historia',
   },
   {
+    navCap: 'CIE 10',
+  },
+  {
     displayName: 'Diagnostico',
     iconName: 'poker-chip',
     route: '/sistema/diagnostico',
+  },
+  {
+    displayName: 'Categotia',
+    iconName: 'category',
+    route: '/sistema/categoria',
   },
 
 

@@ -67,6 +67,7 @@ export class NuevaCitaDialog {
       ocupacion: [{ value: '', disabled: true }, Validators.required],
       fecha: [{ value: '' }, Validators.required],
       hora: [{ value: ''}, Validators.required],
+      motivoConsulta: [{ value: ''}, Validators.required],
     });
 
     

@@ -12,6 +12,7 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { Diagnosis } from 'src/externalService/model/diagnosis/Diagnosis';
 import { DiagnosisService } from 'src/externalService/service/diagnosis/DiagnosisService';
+import { Category } from 'src/externalService/model/category/Category';
 @Component({
   selector: 'nuevodiagnostico',
   templateUrl: 'nuevodiagnostico.html',
@@ -95,10 +96,16 @@ export class NuevoDiagnosticoDialog {
       this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
       return;
     }
+    const newCategory: Category = {
+      id: '',
+      code: this.diagnosisForm.get('codigo')?.value,
+      name: this.diagnosisForm.get('nombre')?.value
+    };
     const newDiagnosis: Diagnosis = {
       id: '',
       code: this.diagnosisForm.get('codigo')?.value,
       name: this.diagnosisForm.get('nombre')?.value,
+      category: newCategory
     };
     this.diagnosisService.createNewDiagnosis(newDiagnosis, this.token).subscribe({
       next: () => {

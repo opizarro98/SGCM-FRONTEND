@@ -10,19 +10,19 @@
             </a>
           </div>
 
-          <div class="or-border m-t-30">----------</div>
+          <div class="or-border m-t-30"></div>
 
           <form [formGroup]="loginForm" (ngSubmit)="login()">
             <!-- Usuario -->
             <mat-form-field appearance="outline" class="w-100" color="primary">
               <input matInput formControlName="username" placeholder="Usuario" />
-              <small *ngIf="username?.errors?.['required'] && username?.touched">El usuario es requerido.</small>
+              <small *ngIf="username?.errors?.['required'] && username?.touched" style="color: red;">El usuario es requerido.</small>
             </mat-form-field>
 
             <!-- Contraseña -->
             <mat-form-field appearance="outline" class="w-100" color="primary">
               <input matInput formControlName="password" type="password" placeholder="Contraseña" />
-              <small *ngIf="password?.errors?.['required'] && password?.touched">La contraseña es requerida.</small>
+              <small *ngIf="password?.errors?.['required'] && password?.touched" style="color: red;">La contraseña es requerida.</small>
             </mat-form-field>
 
             <button mat-flat-button color="primary" class="w-100" type="submit">

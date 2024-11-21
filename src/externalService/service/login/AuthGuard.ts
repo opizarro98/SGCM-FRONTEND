@@ -12,7 +12,7 @@ export class AuthGuard implements CanActivate {
   canActivate(): boolean {
     // Revisamos en sessionStorage o localStorage si hay un token
     const token = sessionStorage.getItem('token') || localStorage.getItem('token');
-
+    
     if (token) {
       // Si el token existe, permitimos el acceso
       console.log("Token encontrado, acceso permitido");

@@ -64,11 +64,11 @@
                                 <td mat-cell *matCellDef="let person">
                                     <button mat-stroked-button color="primary" (click)="editPerson(person.identification)"
                                         style="margin-right: 8px;">
-                                        <img src="/assets/icon/editar.svg" alt="Buscar" width="20" class="m-r-4" />
+                                        <i-tabler class="routeIcon" name="edit" matListItemIcon></i-tabler>
                                         Editar
                                     </button>
                                     <button mat-stroked-button color="warn" (click)="deletePerson(person)">
-                                        <img src="/assets/icon/eliminar.svg" alt="Buscar" width="20" class="m-r-4" />
+                                        <i-tabler class="routeIcon" name="trash" matListItemIcon></i-tabler>
                                         Eliminar
                                     </button>
                                 </td>

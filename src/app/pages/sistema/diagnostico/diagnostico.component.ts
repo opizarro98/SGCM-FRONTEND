@@ -7,16 +7,16 @@ import {Observable, tap, throwError} from 'rxjs';
 import { DiagnosisService } from 'src/externalService/service/diagnosis/DiagnosisService';
 import { Diagnosis } from 'src/externalService/model/diagnosis/Diagnosis';
 import { NuevoDiagnosticoDialog } from './crud/nuevoDiagnosticoDialog.component';
-import { EditarPersonaDialog } from '../persona/crud/editarPersonaDialog.component';
 import {EditarDiagnosisDialog} from './crud/editarDiagnosticoDialog.component';
+import { DiagnosisDTO } from 'src/externalService/model/diagnosis/DiagnosisDTO';
 
 @Component({
   selector: 'app-diagnostico',
   templateUrl: './diagnostico.component.html',
 })
 export class DiagnosticoComponent {
-  displayedColumns: string[] = ['id', 'code', 'name', 'actions'];
-  dataSource = new MatTableDataSource<Diagnosis>();
+  displayedColumns: string[] = ['code', 'name', 'category', 'actions'];
+  dataSource = new MatTableDataSource<DiagnosisDTO>();
 
   // Mapeo para los filtros de cada columna
   columnFilters: { [key: string]: string } = {};

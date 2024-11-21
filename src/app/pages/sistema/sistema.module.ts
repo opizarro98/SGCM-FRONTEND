@@ -18,6 +18,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
@@ -35,6 +36,7 @@ import { MatDividerModule } from '@angular/material/divider';
     MatNativeDateModule,
     MatDividerModule,
     MatPaginatorModule,
+    MatIconModule,
   ],
   declarations: [
     CitasComponent,

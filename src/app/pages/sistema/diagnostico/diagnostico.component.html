@@ -5,8 +5,10 @@
 
         <!-- Filtro alineado a la derecha -->
         <div class="col-sm-3">
-            <button mat-flat-button color="primary" #tooltip="matTooltip" matTooltip="Registrar Paciente"
+            
+            <button mat-flat-button color="primary" #tooltip="matTooltip" matTooltip="Nuevo Diagnostico"
                 matTooltipPosition="right" matTooltipHideDelay="100000" mat-button (click)="openDialog()">
+                <i-tabler class="routeIcon" name="plus" matListItemIcon></i-tabler>            
                 Nuevo Diagnostico
             </button>
         </div>
@@ -34,22 +36,22 @@
                             <!-- Añadido para hacer la tabla desplazable en pantallas pequeñas -->
                             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-                                <!-- Cédula del Paciente -->
-                                <ng-container matColumnDef="id">
-                                    <th mat-header-cell *matHeaderCellDef> ID </th>
-                                    <td mat-cell *matCellDef="let diagnosis"> {{ diagnosis.id}} </td>
-                                </ng-container>
-
-                                <!-- Nombre Completo -->
+                                <!-- Codigo CIE10 -->
                                 <ng-container matColumnDef="code">
                                     <th mat-header-cell *matHeaderCellDef> Codigo </th>
                                     <td mat-cell *matCellDef="let diagnosis"> {{ diagnosis.code}} </td>
                                 </ng-container>
 
-                                <!-- Fecha Nacimiento -->
+                                <!-- Nombre -->
                                 <ng-container matColumnDef="name">
                                     <th mat-header-cell *matHeaderCellDef> Nombre </th>
                                     <td mat-cell *matCellDef="let diagnosis"> {{ diagnosis.name}} </td>
+                                </ng-container>
+
+                                <!-- Categoria -->
+                                <ng-container matColumnDef="category">
+                                    <th mat-header-cell *matHeaderCellDef> Categoria </th>
+                                    <td mat-cell *matCellDef="let diagnosis"> {{ diagnosis.category}} </td>
                                 </ng-container>
 
                                 <!-- Acciones (Editar y Eliminar) -->
@@ -58,12 +60,11 @@
                                     <td mat-cell *matCellDef="let diagnosis">
                                         <button mat-stroked-button color="primary"
                                             (click)="editdiagnosis(diagnosis.identification)" style="margin-right: 8px;">
-                                            <img src="/assets/icon/editar.svg" alt="Buscar" width="20" class="m-r-4" />
+                                            <i-tabler class="routeIcon" name="edit" matListItemIcon></i-tabler>
                                             Editar
                                         </button>
                                         <button mat-stroked-button color="warn" (click)="deletediagnosis(diagnosis)">
-                                            <img src="/assets/icon/eliminar.svg" alt="Buscar" width="20"
-                                                class="m-r-4" />
+                                        <i-tabler class="routeIcon" name="trash" matListItemIcon></i-tabler>
                                             Eliminar
                                         </button>
                                     </td>
@@ -86,3 +87,6 @@
         </div>
     </mat-card-content>
 </mat-card>
+
+
+

@@ -5,6 +5,7 @@ import { CitasComponent } from './citas/citas.component';
 import { HistoriaComponent } from './historia/historia.component';
 import { DiagnosticoComponent } from './diagnostico/diagnostico.component';
 import { PersonaComponent } from './persona/persona.component';
+import {CategoriaComponent} from './categoria/categoria.component';
 
 export const SistemaRoutes: Routes = [
   {
@@ -30,6 +31,10 @@ export const SistemaRoutes: Routes = [
         component: PersonaComponent,
 
       },
+      {
+        path: 'categoria',
+        component: CategoriaComponent,
+      }
     ],
   },
 ];

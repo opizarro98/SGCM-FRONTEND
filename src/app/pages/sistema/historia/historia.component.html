@@ -1,1 +1,81 @@
-<p>historia works!</p>
+<mat-card class="cardWithShadow theme-card">
+    <mat-card-header class="d-flex justify-content-between align-items-center">
+        <mat-card-title class="text-start">Historia Clínica</mat-card-title>
+        <div class="col-sm-2">
+            <button mat-flat-button color="primary" #tooltip="matTooltip" matTooltip="Registrar Paciente"
+                matTooltipPosition="right" matTooltipHideDelay="100000" mat-button>
+                Nuevan Consulta
+            </button>
+        </div>
+    </mat-card-header>   
+
+    <mat-divider></mat-divider>
+
+    <mat-card-content class="b-t-1">
+        <div class="row">
+            <div class="col-lg-12">
+                <mat-card class="b-1 shadow-none">
+                    <mat-card-header class="d-flex justify-content-between align-items-center">
+                        <mat-form-field appearance="outline" class="example-full-width col-sm-8">
+                            <mat-label>Buscar paciente</mat-label>
+                            <input matInput placeholder="ingrese la cedula del paciente">
+                        </mat-form-field>
+                        <button mat-stroked-button color="primary" class="col-md-3">
+                            <i-tabler class="routeIcon" name="Search" matListItemIcon></i-tabler>
+                            Buscar
+                        </button>
+                    </mat-card-header>
+                </mat-card>
+
+                <mat-card-content class="b-t-1 mt-3">
+                    <div class="row">
+                        <!-- Columna izquierda con el acordeón de citas -->
+                        <div class="col-md-6">
+                            <mat-accordion class="example-headers-align" multi>
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>23/04/2024</mat-panel-title>
+                                        <mat-panel-description>
+                                            motivo de la consulta: asdasdsadas
+                                            <mat-icon>date_range</mat-icon>
+                                        </mat-panel-description>
+                                    </mat-expansion-panel-header>
+                                    <!-- Contenido del panel de expansión -->
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                            <mat-divider></mat-divider>
+                            <br/>
+                            <mat-accordion class="example-headers-align" multi>
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>23/04/2024</mat-panel-title>
+                                        <mat-panel-description>
+                                            motivo de la consulta: asdasdsadas
+                                            <mat-icon>date_range</mat-icon>
+                                        </mat-panel-description>
+                                    </mat-expansion-panel-header>
+                                    <!-- Contenido del panel de expansión -->
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                            
+                            
+                        </div>
+
+                        <!-- Columna derecha con antecedentes y diagnóstico -->
+                        <div class="col-md-6">
+                            <mat-form-field appearance="outline" class="w-100 mb-3">
+                                <mat-label>Antecedentes</mat-label>
+                                <textarea matInput rows="5" placeholder="Ingrese los antecedentes..."></textarea>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Diagnóstico</mat-label>
+                                <textarea matInput rows="5" placeholder="Ingrese el diagnóstico..."></textarea>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
