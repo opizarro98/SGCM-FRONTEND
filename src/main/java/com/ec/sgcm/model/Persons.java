@@ -1,9 +1,5 @@
 package com.ec.sgcm.model;
 
-import org.hibernate.annotations.Comment;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -14,7 +10,10 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,36 +26,33 @@ public class Persons {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "persons_id")
-    @Comment("Ud de la persona, es un campo autoincrementable")
     private Long id;
 
     @Column(nullable = false)
-    @Comment("Numero de cedula, ruc o pasaporte de la persona")
     private String identification;
 
     @Column(nullable = false)
-    @Comment("Nombre de la persona")
-    private String first_name;
+    private String firstName;
 
     @Column(nullable = false)
-    @Comment("Apellidos de la persona ")
-    private String last_name;
+    private String lastName;
 
     @Column(nullable = false)
-    @Comment("Fecha de nacimeinto de la persona")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate birth_date;
+    private LocalDate birthDate;
 
     @Column(nullable = false)
-    @Comment("Ocupacion de la persona.")
     private String occupancy;
 
+    // Relación directa con Diagnóstico Actual
+    @ManyToOne
+    @JoinColumn(name = "current_diagnosis_id", nullable = true)
+    private DiagnosisCIE currentDiagnosis;
+
+    // Relación con Citas Médicas
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Appointments> appointments;
 
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Antecedents> antecedents;
-
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Histories> histories;
+    // Relación con Historia Clínica (1 a 1)
+    @OneToOne(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Histories history;
 }

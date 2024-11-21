@@ -38,9 +38,9 @@ public class PersonServiceImp implements PersonService {
         if (personExist == null) {
             throw new EntityNotFoundException("Person not found with identification: " + person.getIdentification());
         }
-        personExist.setFirst_name(person.getFirst_name());
-        personExist.setLast_name(person.getLast_name());
-        personExist.setBirth_date(person.getBirth_date());
+        personExist.setFirstName(person.getFirstName());
+        personExist.setLastName(person.getLastName());
+        personExist.setBirthDate(person.getBirthDate());
         personExist.setOccupancy(person.getOccupancy());
         return personRepo.save(personExist);
     }

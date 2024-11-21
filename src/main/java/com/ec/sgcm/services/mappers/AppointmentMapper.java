@@ -6,10 +6,10 @@ import com.ec.sgcm.model.dto.AppointmentDTO;
 public class AppointmentMapper {
     public static AppointmentDTO toDTO(Appointments appointment) {
         AppointmentDTO dto = new AppointmentDTO();
-        dto.setPatientname(appointment.getPerson().getFirst_name() + " " + appointment.getPerson().getLast_name());
+        dto.setPatientname(appointment.getPerson().getFirstName() + " " + appointment.getPerson().getLastName());
         dto.setDate(appointment.getDate());
         dto.setHour(appointment.getHour());
-        dto.setDescription(appointment.getDescription());
+        dto.setReason(appointment.getReason());
         return dto;
     }
 }

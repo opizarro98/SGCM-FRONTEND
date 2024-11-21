@@ -29,19 +29,20 @@ public class DiagnosisCIEServiceImp implements DiagnosisCIEService {
 
     @Override
     public DiagnosisCIE createNewDiagnosis(DiagnosisCIE diagnosis) {
-        CategoriesCIE category = categorieCIERepo.findByCode(diagnosis.getCategory().getCode())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
-        diagnosis.setCategory(category);
+        // CategoriesCIE category =
+        // categorieCIERepo.findByCode(diagnosis.getCategory().getCode())
+        // .orElseThrow(() -> new RuntimeException("Category not found"));
+        // diagnosis.setCategory(category);
         return diagnosisRepo.save(diagnosis);
     }
 
     @Override
     public List<DiagnosisCIEDTO> searchAllDIagnosis() {
         List<DiagnosisCIE> diagnosisList = diagnosisRepo.findAll();
-
-        return diagnosisList.stream()
-                .map(diagnosis -> DiagnosisMapper.toDTO(diagnosis, diagnosis.getCategory()))
-                .collect(Collectors.toList());
+        return null;
+        // return diagnosisList.stream()
+        // .map(diagnosis -> DiagnosisMapper.toDTO(diagnosis, diagnosis.getCategory()))
+        // .collect(Collectors.toList());
     }
 
     @Override

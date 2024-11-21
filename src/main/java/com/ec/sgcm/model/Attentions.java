@@ -41,10 +41,4 @@ public class Attentions {
     @ManyToOne
     @JoinColumn(name = "history_id", nullable = false)
     private Histories history;
-
-    // Relación con Diagnosis
-    @ManyToOne
-    @JoinColumn(name = "diagnosis_id", nullable = false)
-    private DiagnosisCIE diagnosis;
-
 }

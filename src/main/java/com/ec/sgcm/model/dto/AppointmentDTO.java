@@ -12,5 +12,5 @@ public class AppointmentDTO {
     String patientname;
     LocalDate date;
     LocalTime hour;
-    String description;
+    String reason;
 }

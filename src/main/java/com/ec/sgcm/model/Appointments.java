@@ -3,10 +3,6 @@ package com.ec.sgcm.model;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import org.hibernate.annotations.Comment;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,28 +19,21 @@ import lombok.Setter;
 @Entity
 @Table(name = "appointments")
 public class Appointments {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "appointments_id")
-    @Comment("Id del turno, es un campo autoincrementable")
+    @Column(name = "appointment_id")
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "person_id", nullable = false)
+    private Persons person;
+
     @Column(nullable = false)
-    @Comment("Fecha de la consulta")
     private LocalDate date;
 
     @Column(nullable = false)
-    @Comment("Hora de la consulta")
     private LocalTime hour;
 
     @Column(nullable = false)
-    @Comment("motivo de la consulta")
-    private String description;
-
-    // Relación con Person
-    @ManyToOne
-    @JoinColumn(name = "person_id", nullable = false)
-    @JsonBackReference
-    private Persons person;
+    private String reason; // Motivo de la consulta
 }

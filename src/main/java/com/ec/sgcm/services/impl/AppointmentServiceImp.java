@@ -36,7 +36,7 @@ public class AppointmentServiceImp implements AppointmentService {
         Optional<Appointments> existingAppointmentOpt = appointmentRepo.findById(appointment.getId());
         if (existingAppointmentOpt.isPresent()) {
             Appointments existingAppointment = existingAppointmentOpt.get();
-            existingAppointment.setDescription(appointment.getDescription());
+            existingAppointment.setReason(appointment.getReason());
             existingAppointment.setDate(appointment.getDate());
             existingAppointment.setHour(appointment.getHour());
             existingAppointment.setPerson(appointment.getPerson());
