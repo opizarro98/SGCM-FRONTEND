@@ -2,6 +2,8 @@ package com.ec.sgcm.model;
 
 import org.hibernate.annotations.Comment;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,8 +39,9 @@ public class Attentions {
     @Comment("Tareas que deberia enviar despues de cada atencion medica")
     private String intersessionTask;
 
-    // Relación con History
+    // Relación con Historia Clínica
     @ManyToOne
     @JoinColumn(name = "history_id", nullable = false)
+    @JsonBackReference // Marca esta relación como referencia hija
     private Histories history;
 }

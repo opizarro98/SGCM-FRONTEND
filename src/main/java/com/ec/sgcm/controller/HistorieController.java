@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
@@ -25,7 +24,7 @@ public class HistorieController {
     HistorieService historieService;
 
     // Crear o actualizar una historia clínica
-    @PostMapping
+    @PostMapping("createNewHistory")
     public ResponseEntity<Histories> createOrUpdateHistory(@Valid @RequestBody Histories history) {
         Histories savedHistory = historieService.createNewHistorie(history);
         return ResponseEntity.ok(savedHistory);

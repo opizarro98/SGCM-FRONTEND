@@ -3,6 +3,8 @@ package com.ec.sgcm.model;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +28,7 @@ public class Appointments {
 
     @ManyToOne
     @JoinColumn(name = "person_id", nullable = false)
+    @JsonBackReference // Marca esta relación como la referencia "hija"
     private Persons person;
 
     @Column(nullable = false)

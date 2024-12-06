@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.annotations.Comment;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -34,10 +35,11 @@ public class Histories {
     // Relación con Persona (1 a 1)
     @OneToOne
     @JoinColumn(name = "person_id", nullable = false)
-    @JsonBackReference
+    @JsonBackReference // Marca esta relación como referencia hija
     private Persons person;
 
     // Relación con Atenciones Médicas
     @OneToMany(mappedBy = "history", cascade = CascadeType.ALL)
+    @JsonManagedReference // Marca esta relación como referencia padre
     private List<Attentions> attentions;
 }

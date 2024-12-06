@@ -3,6 +3,8 @@ package com.ec.sgcm.model;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -50,6 +52,7 @@ public class Persons {
 
     // Relación con Citas Médicas
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference // Marca esta relación como la referencia "padre"
     private List<Appointments> appointments;
 
     // Relación con Historia Clínica (1 a 1)
