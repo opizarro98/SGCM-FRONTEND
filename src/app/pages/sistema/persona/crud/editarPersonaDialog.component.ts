@@ -62,9 +62,9 @@ export class EditarPersonaDialog {
       next: (person) => {
         this.personForm.patchValue({
           cedula: person.identification,
-          nombre: person.first_name,
-          apellido: person.last_name,
-          fechaNacimiento: person.birth_date,
+          nombre: person.firstName,
+          apellido: person.lastName,
+          fechaNacimiento: person.birthDate,
           ocupacion: person.occupancy
         });
         this.personForm.enable(); // Habilitar el formulario para edición
@@ -92,9 +92,9 @@ export class EditarPersonaDialog {
     const editPerson: Person = {
       id: this.idGlobalPerson,
       identification: this.personForm.get('cedula')?.value,
-      first_name: this.personForm.get('nombre')?.value,
-      last_name: this.personForm.get('apellido')?.value,
-      birth_date: formatDate(this.personForm.get('fechaNacimiento')?.value, 'yyyy-MM-dd', "en-US"),
+      firstName: this.personForm.get('nombre')?.value,
+      lastName: this.personForm.get('apellido')?.value,
+      birthDate: formatDate(this.personForm.get('fechaNacimiento')?.value, 'yyyy-MM-dd', "en-US"),
       occupancy: this.personForm.get('ocupacion')?.value
     };
     this.personService.UpdatePerson(editPerson, this.token).subscribe({

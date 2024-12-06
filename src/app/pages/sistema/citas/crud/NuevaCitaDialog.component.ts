@@ -86,9 +86,9 @@ export class NuevaCitaDialog {
         this.foundPerson = person;
         this.isUserRegistered = true;
         this.citaForm.patchValue({
-          nombre: person.first_name,
-          apellido: person.last_name,
-          fechaNacimiento: person.birth_date,
+          nombre: person.firstName,
+          apellido: person.lastName,
+          fechaNacimiento: person.birthDate,
           ocupacion: person.occupancy,
           fecha: new Date(),
           motivoConsulta: ''
@@ -122,9 +122,9 @@ export class NuevaCitaDialog {
     const newPerson: Person = {
       id: '',
       identification: this.citaForm.get('cedula')?.value,
-      first_name: this.citaForm.get('nombre')?.value,
-      last_name: this.citaForm.get('apellido')?.value,
-      birth_date: formatDate(this.citaForm.get('fechaNacimiento')?.value, 'yyyy-MM-dd', "en-US"),
+      firstName: this.citaForm.get('nombre')?.value,
+      lastName: this.citaForm.get('apellido')?.value,
+      birthDate: formatDate(this.citaForm.get('fechaNacimiento')?.value, 'yyyy-MM-dd', "en-US"),
       occupancy: this.citaForm.get('ocupacion')?.value
     };
     this.personService.createPerson(newPerson, this.token).subscribe({

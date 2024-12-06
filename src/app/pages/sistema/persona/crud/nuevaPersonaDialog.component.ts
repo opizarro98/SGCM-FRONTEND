@@ -14,6 +14,8 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {Person} from 'src/externalService/model/person/Person';
 import {formatDate} from '@angular/common';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
+import { ClinicHistorie } from 'src/externalService/model/history/ClinicHistorie';
+import { HistoryService } from 'src/externalService/service/history/HistoryService';
 
 @Component({
   selector: 'nuevaPersona',
@@ -41,6 +43,7 @@ export class NuevaPersonaDialog {
   constructor(
     private fb: FormBuilder,
     private personService: PersonService,
+    private historyService: HistoryService,
     private snackBar: MatSnackBar, // Para mostrar notificaciones 
     private dialogRef: MatDialogRef<NuevaPersonaDialog>,
 
@@ -79,9 +82,9 @@ export class NuevaPersonaDialog {
         this.foundPerson = person;
         this.isUserRegistered = true;
         this.personForm.patchValue({
-          nombre: person.first_name,
-          apellido: person.last_name,
-          fechaNacimiento: person.birth_date,
+          nombre: person.firstName,
+          apellido: person.lastName,
+          fechaNacimiento: person.birthDate,
           ocupacion: person.occupancy,
         });
         this.personForm.disable();
@@ -100,27 +103,48 @@ export class NuevaPersonaDialog {
 
 
   onSubmit() {
-    if (!this.token) {
-      this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
-      return;
-    }
-    const newPerson: Person = {
-      id: '',
-      identification: this.personForm.get('cedula')?.value,
-      first_name: this.personForm.get('nombre')?.value,
-      last_name: this.personForm.get('apellido')?.value,
-      birth_date: formatDate(this.personForm.get('fechaNacimiento')?.value, 'yyyy-MM-dd', "en-US"),
-      occupancy: this.personForm.get('ocupacion')?.value
-    };
-    this.personService.createPerson(newPerson, this.token).subscribe({
-      next: () => {
-        this.snackBar.open('Paciente creado con exito.', 'Cerrar', { duration: 3000 });
-        this.dialogRef.close(true);
-      },
-      error: () => {
-        this.snackBar.open("Error al registrar el paciente. Consulte al Administrador.", 'Cerrar', { duration: 3000 });
-      }
-    });
+  if (!this.token) {
+    this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
+    return;
   }
+
+  const newPerson: Person = {
+    id: '',
+    identification: this.personForm.get('cedula')?.value,
+    firstName: this.personForm.get('nombre')?.value,
+    lastName: this.personForm.get('apellido')?.value,
+    birthDate: formatDate(this.personForm.get('fechaNacimiento')?.value, 'yyyy-MM-dd', "en-US"),
+    occupancy: this.personForm.get('ocupacion')?.value
+  };
+
+  // Crear la persona
+  this.personService.createPerson(newPerson, this.token).subscribe({
+    next: () => {
+      this.snackBar.open('Paciente creado con éxito.', 'Cerrar', { duration: 3000 });
+
+      this.personService.getPersonByIdentification(newPerson.identification).subscribe({
+        next: (personfind) => {
+          const ClinicHistory: ClinicHistorie= {
+            id:'',
+            person : personfind
+          };
+          if (!this.token) {
+            this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
+            return;
+          }
+          this.historyService.createNewHitory(ClinicHistory, this.token);
+          console.log("Ingresa a crear el historial de la persona")
+          this.dialogRef.close(true);
+        },
+        error: () => {
+          this.snackBar.open('Error al obtener los datos del paciente.', 'Cerrar', { duration: 3000 });
+        }
+      });
+    },
+    error: () => {
+      this.snackBar.open("Error al registrar el paciente. Consulte al Administrador.", 'Cerrar', { duration: 3000 });
+    }
+  });
+}
 
 }

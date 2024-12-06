@@ -1,8 +1,8 @@
 export interface Person {
   id:string;
   identification: string;
-  first_name: string;
-  last_name: string;
-  birth_date:string;
+  firstName: string;
+  lastName: string;
+  birthDate:string;
   occupancy: string;
 }
