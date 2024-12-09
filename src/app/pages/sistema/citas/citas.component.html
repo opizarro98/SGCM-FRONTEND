@@ -54,21 +54,20 @@
                                 <!-- Descripción -->
                                 <ng-container matColumnDef="description">
                                     <th mat-header-cell *matHeaderCellDef> Descripción </th>
-                                    <td mat-cell *matCellDef="let appointment"> {{appointment.description}} </td>
+                                    <td mat-cell *matCellDef="let appointment"> {{appointment.reason}} </td>
                                 </ng-container>
 
                                 <!-- Acciones (Editar y Eliminar) -->
                                 <ng-container matColumnDef="actions">
                                     <th mat-header-cell *matHeaderCellDef> Acciones </th>
                                     <td mat-cell *matCellDef="let person">
-                                        <button mat-stroked-button color="primary" (click)="editPerson(person.identification)"
-                                            style="margin-right: 8px;">
-                                            <img src="/assets/icon/editar.svg" alt="Buscar" width="20" class="m-r-4" />
-                                            Editar
+                                        <button mat-stroked-button color="primary" (click)="editPerson(person.identification)" style="margin-right: 8px;">
+                                            <i-tabler class="routeIcon" name="health-recognition" matListItemIcon></i-tabler>
+                                            Iniciar
                                         </button>
                                         <button mat-stroked-button color="warn" (click)="deletePerson(person)">
-                                            <img src="/assets/icon/eliminar.svg" alt="Buscar" width="20" class="m-r-4" />
-                                            Eliminar
+                                            <i-tabler class="routeIcon" name="calendar-x" matListItemIcon></i-tabler>
+                                            Cancelar
                                         </button>
                                     </td>
                                 </ng-container>

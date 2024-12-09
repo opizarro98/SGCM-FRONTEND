@@ -6,6 +6,7 @@ import { AppointmentService } from 'src/externalService/service/appointment/Appo
 import { AppointmentListDTO } from 'src/externalService/model/appointment/AppintmentListDTO';
 import { NuevaCitaDialog } from './crud/NuevaCitaDialog.component';
 import {Person} from 'src/externalService/model/person/Person';
+import { AtencionPacienteDialog } from './crud/atencionPaciente.component';
 
 
 @Component({
@@ -38,19 +39,19 @@ export class CitasComponent implements AfterViewInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-   // Método para editar una persona
+  // Método para iniciar una atencion
   editPerson(personIdentification: string) {
-    // const dialogRef = this.dialog.open(EditarPersonaDialog, {
-    //   data: { identification: personIdentification } // Enviar la cédula
-    // });
+    const dialogRef = this.dialog.open(AtencionPacienteDialog, {
+      data: { identification: personIdentification } // Enviar la cédula
+    });
 
-    // // Escuchar el resultado del diálogo, si es necesario
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-    //     this.loadAllPersons();
-    //     console.log("Persona actualizada");
-    //   }
-    // });
+    // Escuchar el resultado del diálogo, si es necesario
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadAppointments
+        console.log("Atención guardad con exito");
+      }
+    });
   }
 
   // Método para eliminar una persona
@@ -70,6 +71,7 @@ export class CitasComponent implements AfterViewInit {
     });
   }
 
+  
     
 }
 

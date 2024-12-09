@@ -162,7 +162,7 @@ export class NuevaCitaDialog {
     const newAppointment: Appointment = {
       date: this.citaForm.get('fecha')?.value,
       hour: this.citaForm.get('hora')?.value,
-      description: this.citaForm.get('motivoConsulta')?.value,
+      reason: this.citaForm.get('motivoConsulta')?.value,
       person: person,
     };
 

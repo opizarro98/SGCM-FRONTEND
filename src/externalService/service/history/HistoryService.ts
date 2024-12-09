@@ -16,11 +16,10 @@ export class HistoryService {
 
 
   // Crea una nueva historia
-  createNewHitory(history: ClinicHistorie, token: string): Observable<any> {
+  createNewHistory(history: ClinicHistorie, token: string): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-
     return this.http.post<any>(`${this.apiUrl}createNewHistory`, history, { headers }).pipe(
       tap((response) => {
         console.log('History created successfully:', response);

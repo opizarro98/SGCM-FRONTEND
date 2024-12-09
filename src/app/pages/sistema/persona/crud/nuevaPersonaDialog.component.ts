@@ -16,6 +16,8 @@ import {formatDate} from '@angular/common';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import { ClinicHistorie } from 'src/externalService/model/history/ClinicHistorie';
 import { HistoryService } from 'src/externalService/service/history/HistoryService';
+import { switchMap } from 'rxjs';
+import { PersonListDTO } from 'src/externalService/model/person/PersonListDTO';
 
 @Component({
   selector: 'nuevaPersona',
@@ -102,7 +104,7 @@ export class NuevaPersonaDialog {
   }
 
 
-  onSubmit() {
+onSubmit() {
   if (!this.token) {
     this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
     return;
@@ -117,34 +119,31 @@ export class NuevaPersonaDialog {
     occupancy: this.personForm.get('ocupacion')?.value
   };
 
-  // Crear la persona
-  this.personService.createPerson(newPerson, this.token).subscribe({
-    next: () => {
-      this.snackBar.open('Paciente creado con éxito.', 'Cerrar', { duration: 3000 });
-
-      this.personService.getPersonByIdentification(newPerson.identification).subscribe({
-        next: (personfind) => {
-          const ClinicHistory: ClinicHistorie= {
-            id:'',
-            person : personfind
-          };
-          if (!this.token) {
-            this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
-            return;
-          }
-          this.historyService.createNewHitory(ClinicHistory, this.token);
-          console.log("Ingresa a crear el historial de la persona")
-          this.dialogRef.close(true);
-        },
-        error: () => {
-          this.snackBar.open('Error al obtener los datos del paciente.', 'Cerrar', { duration: 3000 });
+    this.personService.createPerson(newPerson, this.token).pipe(
+      switchMap(() => {
+        this.snackBar.open('Paciente creado con éxito.', 'Cerrar', { duration: 3000 });
+        return this.personService.getPersonByIdentification(newPerson.identification);
+      }),
+      switchMap((personfind) => {
+        if (!this.token) {
+          this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
+          throw new Error('Token no encontrado');
         }
-      });
-    },
-    error: () => {
-      this.snackBar.open("Error al registrar el paciente. Consulte al Administrador.", 'Cerrar', { duration: 3000 });
-    }
-  });
+        const clinicHistory: ClinicHistorie = {
+          id: '',
+          person: personfind
+        };
+        return this.historyService.createNewHistory(clinicHistory, this.token);
+      })
+    ).subscribe({
+      next: () => {
+        this.snackBar.open('Historia clínica creada con éxito.', 'Cerrar', { duration: 3000 });
+        this.dialogRef.close(true); // Cierra el diálogo tras éxito
+      },
+      error: (err) => {
+        this.snackBar.open('Error al procesar la solicitud: ' + err.message, 'Cerrar', { duration: 3000 });
+      }
+    });
+  }
 }
 
-}
