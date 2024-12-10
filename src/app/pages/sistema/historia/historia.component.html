@@ -2,31 +2,46 @@
     <mat-card-header class="d-flex justify-content-between align-items-center">
         <mat-card-title class="text-start">Historia Clínica</mat-card-title>
         <div class="col-sm-2">
-            <button mat-flat-button color="primary" #tooltip="matTooltip" matTooltip="Registrar Paciente"
-                matTooltipPosition="right" matTooltipHideDelay="100000" mat-button>
-                Nuevan Consulta
+            <button mat-flat-button color="primary" mat-button>
+                Nueva Consulta
             </button>
         </div>
-    </mat-card-header>   
+    </mat-card-header>
 
     <mat-divider></mat-divider>
 
-    <mat-card-content class="b-t-1">
+    <mat-card-content>
         <div class="row">
             <div class="col-lg-12">
                 <mat-card class="b-1 shadow-none">
-                    <mat-card-header class="d-flex justify-content-between align-items-center">
+                    <mat-card-header class="d-flex align-items-start">
                         <mat-form-field appearance="outline" class="example-full-width col-sm-8">
                             <mat-label>Buscar paciente</mat-label>
-                            <input matInput placeholder="ingrese la cedula del paciente">
+                            <input matInput placeholder="Ingrese la cédula del paciente" [(ngModel)]="identification">
                         </mat-form-field>
-                        <button mat-stroked-button color="primary" class="col-md-3">
+                        <button mat-stroked-button color="primary" class="col-md-3 buscar-btn" (click)="buscarPaciente()">
                             <i-tabler class="routeIcon" name="Search" matListItemIcon></i-tabler>
                             Buscar
                         </button>
                     </mat-card-header>
-                </mat-card>
 
+                    <mat-card-header class="d-flex align-items-start">
+                        <mat-form-field appearance="outline" class="example-full-width col-sm-8">
+                            
+                        </mat-form-field>
+                        <!-- Datos del paciente -->
+                        <div *ngIf="paciente" class="row mt-3">
+                            <div class="col-md-6">
+                                <p><strong>Nombre:</strong> {{ paciente.firstName }} {{ paciente.lastName }}</p>
+                                <p><strong>Fecha de Nacimiento:</strong> {{ paciente.birthDate | date: 'dd/MM/yyyy' }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Edad:</strong> {{ calcularEdad(paciente.birthDate) }} años</p>
+                                <p><strong>Ocupación:</strong> {{ paciente.occupancy }}</p>
+                            </div>
+                        </div>
+                    </mat-card-header>
+                </mat-card>
                 <mat-card-content class="b-t-1 mt-3">
                     <div class="row">
                         <!-- Columna izquierda con el acordeón de citas -->
@@ -36,29 +51,13 @@
                                     <mat-expansion-panel-header>
                                         <mat-panel-title>23/04/2024</mat-panel-title>
                                         <mat-panel-description>
-                                            motivo de la consulta: asdasdsadas
+                                            Motivo de la consulta: asdasdsadas
                                             <mat-icon>date_range</mat-icon>
                                         </mat-panel-description>
                                     </mat-expansion-panel-header>
                                     <!-- Contenido del panel de expansión -->
                                 </mat-expansion-panel>
                             </mat-accordion>
-                            <mat-divider></mat-divider>
-                            <br/>
-                            <mat-accordion class="example-headers-align" multi>
-                                <mat-expansion-panel>
-                                    <mat-expansion-panel-header>
-                                        <mat-panel-title>23/04/2024</mat-panel-title>
-                                        <mat-panel-description>
-                                            motivo de la consulta: asdasdsadas
-                                            <mat-icon>date_range</mat-icon>
-                                        </mat-panel-description>
-                                    </mat-expansion-panel-header>
-                                    <!-- Contenido del panel de expansión -->
-                                </mat-expansion-panel>
-                            </mat-accordion>
-                            
-                            
                         </div>
 
                         <!-- Columna derecha con antecedentes y diagnóstico -->

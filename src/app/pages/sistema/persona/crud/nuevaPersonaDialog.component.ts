@@ -14,10 +14,10 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {Person} from 'src/externalService/model/person/Person';
 import {formatDate} from '@angular/common';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import { ClinicHistorie } from 'src/externalService/model/history/ClinicHistorie';
 import { HistoryService } from 'src/externalService/service/history/HistoryService';
 import { switchMap } from 'rxjs';
 import { PersonListDTO } from 'src/externalService/model/person/PersonListDTO';
+import { ClinicHistorie } from 'src/externalService/model/history/ClinicHistorie';
 
 @Component({
   selector: 'nuevaPersona',

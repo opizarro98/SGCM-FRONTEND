@@ -13,6 +13,9 @@ import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Person} from 'src/externalService/model/person/Person';
 import { formatDate } from '@angular/common';
+import { Attentions } from 'src/externalService/model/attentions/attentions';
+import { AttentionsService } from 'src/externalService/service/attentions/attentionsService';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'atencionPaciente',
@@ -31,37 +34,75 @@ import { formatDate } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AtencionPacienteDialog {
-  atencionForm: FormGroup;
+   personForm: FormGroup;
+   historyId: number | null = null;
 
   constructor(
     private fb: FormBuilder,
+    private personService: PersonService,
+    private attentionsService:  AttentionsService,
+    private dialogRef: MatDialogRef<AtencionPacienteDialog>,
     private snackBar: MatSnackBar,
-    private dialogRef: MatDialogRef<AtencionPacienteDialog>
+    @Inject(MAT_DIALOG_DATA) public data: { identification: string, reason:  string}
   ) {
-    this.atencionForm = this.fb.group({
-      cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-      nombre: ['', Validators.required],
-      apellido: ['', Validators.required],
-      fechaNacimiento: ['', Validators.required],
-      ocupacion: ['', Validators.required],
-      razonConsulta: ['', Validators.required],
+    this.personForm = this.fb.group({
+      cedula: [{ value: '', disabled: true }, [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      nombre: [{ value: '', disabled: true }, Validators.required],
+      apellido: [{ value: '', disabled: true }, Validators.required],
+      fechaNacimiento: [{ value: '', disabled: true }, Validators.required],
+      ocupacion: [{ value: '', disabled: true }, Validators.required],
+      motivoConsulta: [this.data.reason, Validators.required],
       estadoActual: ['', Validators.required],
       tareasInterseccion: ['', Validators.required]
     });
+
+    this.buscarPersona();
   }
 
   ngOnInit(): void {}
 
-  onCancel(): void {
-    this.dialogRef.close();
+  buscarPersona() {
+    this.personService.getPersonByIdentification(this.data.identification).subscribe({
+      next: (person: any) => {
+        this.personForm.patchValue({
+          cedula: person.identification,
+          nombre: person.firstName,
+          apellido: person.lastName,
+          fechaNacimiento: person.birthDate,
+          ocupacion: person.occupancy
+        });
+         this.historyId = person.history?.id || null;
+      },
+      error: () => {
+        console.error('Error al buscar la persona');
+      }
+    });
   }
 
   onSubmit(): void {
-    if (this.atencionForm.valid) {
-      // Lógica para manejar el envío de datos
-      console.log('Formulario enviado', this.atencionForm.value);
-      this.snackBar.open('Atención registrada con éxito', 'Cerrar', { duration: 3000 });
-      this.dialogRef.close(this.atencionForm.value);
+    if (this.personForm.valid && this.historyId !== null) {
+      // Construir el objeto de tipo Attentions
+      const attention: Attentions = {
+        reason: this.personForm.get('motivoConsulta')?.value,
+        currentStatus: this.personForm.get('estadoActual')?.value,
+        intersessionTask: this.personForm.get('tareasInterseccion')?.value,
+        history: { id: this.historyId } 
+      };
+
+      // Obtener el token desde el almacenamiento local o un servicio
+      const token = localStorage.getItem('token') || '';
+
+      // Llamar al servicio para crear la atención
+      this.attentionsService.createAttention(attention, token).subscribe({
+        next: (response) => {
+          this.snackBar.open('Atención registrada correctamente', 'Cerrar', { duration: 3000 });
+          this.dialogRef.close(response);
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error al registrar la atención:', error);
+          this.snackBar.open('Error al registrar la atención', 'Cerrar', { duration: 3000 });
+        }
+      });
     } else {
       this.snackBar.open('Complete todos los campos requeridos', 'Cerrar', { duration: 3000 });
     }

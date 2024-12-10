@@ -1,62 +1,83 @@
-<h2 mat-dialog-title>Atención de Pacientes</h2>
+<h2 mat-dialog-title>Registrar Nuevo Paciente</h2>
 <mat-divider></mat-divider>
 <mat-dialog-content class="mat-typography">
-    <form [formGroup]="atencionForm">
-        <!-- Datos del Paciente -->
+    <form [formGroup]="personForm">
+        <!-- Cédula -->
         <div class="row">
-            <mat-form-field class="full-width">
-                <mat-label>Cédula</mat-label>
-                <input matInput formControlName="cedula" placeholder="Ingrese la cédula">
-            </mat-form-field>
-
-            <mat-form-field class="full-width">
-                <mat-label>Nombre</mat-label>
-                <input matInput formControlName="nombre" placeholder="Ingrese el nombre">
-            </mat-form-field>
-
-            <mat-form-field class="full-width">
-                <mat-label>Apellido</mat-label>
-                <input matInput formControlName="apellido" placeholder="Ingrese el apellido">
-            </mat-form-field>
-
-            <mat-form-field class="full-width">
-                <mat-label>Fecha de Nacimiento</mat-label>
-                <input matInput [matDatepicker]="picker" formControlName="fechaNacimiento"
-                    placeholder="Seleccione la fecha">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-
-            <mat-form-field class="full-width">
-                <mat-label>Ocupación</mat-label>
-                <input matInput formControlName="ocupacion" placeholder="Ingrese la ocupación">
-            </mat-form-field>
+            <div class="col-12 col-md-7">
+                <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Cédula</mat-label>
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <input matInput formControlName="cedula" [readonly]="true" />
+                </mat-form-field>
+            </div>
         </div>
 
-        <!-- Campos Adicionales -->
+        <!-- Nombres y Apellidos -->
         <div class="row">
-            <mat-form-field class="full-width">
-                <mat-label>Razón de Consulta</mat-label>
-                <textarea matInput formControlName="razonConsulta"
-                    placeholder="Ingrese la razón de consulta"></textarea>
-            </mat-form-field>
+            <div class="col-12 col-md-6">
+                <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Nombres</mat-label>
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <input matInput formControlName="nombre" [readonly]="true" />
+                </mat-form-field>
+            </div>
+            <div class="col-12 col-md-6">
+                <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Apellidos</mat-label>
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <input matInput formControlName="apellido" [readonly]="true" />
+                </mat-form-field>
+            </div>
+        </div>
 
-            <mat-form-field class="full-width">
-                <mat-label>Estado Actual</mat-label>
-                <textarea matInput formControlName="estadoActual"
-                    placeholder="Describa el estado actual del paciente"></textarea>
-            </mat-form-field>
+        <!-- Fecha de nacimiento y Ocupación -->
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Fecha de nacimiento</mat-label>
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <input matInput [matDatepicker]="pickerFechaNacimiento" formControlName="fechaNacimiento"
+                        [readonly]="true" />
+                    <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimiento"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerFechaNacimiento></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col-12 col-md-6">
+                <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Ocupación</mat-label>
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <input matInput formControlName="ocupacion" [readonly]="true" />
+                </mat-form-field>
+            </div>
+        </div>
 
-            <mat-form-field class="full-width">
-                <mat-label>Tareas de Intersección</mat-label>
-                <textarea matInput formControlName="tareasInterseccion"
-                    placeholder="Ingrese las tareas de intersección"></textarea>
-            </mat-form-field>
+        <!-- Campos editables -->
+        <div class="row">
+            <div class="col-12">
+                <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Motivo de Consulta</mat-label>
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <textarea matInput formControlName="motivoConsulta"></textarea>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Estado Actual</mat-label>
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <textarea matInput formControlName="estadoActual"></textarea>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Tareas de Intersección</mat-label>
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <textarea matInput formControlName="tareasInterseccion"></textarea>
+                </mat-form-field>
+            </div>
         </div>
     </form>
 </mat-dialog-content>
-
-<mat-dialog-actions align="end">
-    <button mat-button (click)="onCancel()">Cancelar</button>
-    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!atencionForm.valid">Guardar</button>
+<mat-divider></mat-divider>
+<mat-dialog-actions align="center">
+    <mat-card-content>
+        <button mat-flat-button color="warn" mat-dialog-close>Cancelar</button>
+        <button mat-button mat-flat-button color="primary" (click)="onSubmit()">Guardar</button>
+    </mat-card-content>
 </mat-dialog-actions>

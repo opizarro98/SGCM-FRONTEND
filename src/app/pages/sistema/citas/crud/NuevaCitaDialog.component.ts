@@ -15,6 +15,9 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {Person} from 'src/externalService/model/person/Person';
 import {formatDate} from '@angular/common';
 import {Appointment} from 'src/externalService/model/appointment/Appointment';
+import { ClinicHistorie } from 'src/externalService/model/history/ClinicHistorie';
+import { switchMap } from 'rxjs';
+import { HistoryService } from 'src/externalService/service/history/HistoryService';
 
 @Component({
   selector: 'nuevacita',
@@ -38,6 +41,7 @@ export class NuevaCitaDialog {
   isUserRegistered: boolean = false;
   token: string | null = null;// Reemplaza con el token correcto
   foundPerson: Person | null = null;
+  
 
   constructor(
     private fb: FormBuilder,
@@ -45,6 +49,7 @@ export class NuevaCitaDialog {
     private snackBar: MatSnackBar, // Para mostrar notificaciones 
     private appointmentService:  AppointmentService,
     private dialogRef: MatDialogRef<NuevaCitaDialog>,
+    private historyService: HistoryService
     
   ) {
     this.token = localStorage.getItem('token');
@@ -118,40 +123,43 @@ export class NuevaCitaDialog {
     return;
   }
 
-  if (!this.isUserRegistered) {
-    const newPerson: Person = {
-      id: '',
-      identification: this.citaForm.get('cedula')?.value,
-      firstName: this.citaForm.get('nombre')?.value,
-      lastName: this.citaForm.get('apellido')?.value,
-      birthDate: formatDate(this.citaForm.get('fechaNacimiento')?.value, 'yyyy-MM-dd', "en-US"),
-      occupancy: this.citaForm.get('ocupacion')?.value
-    };
-    this.personService.createPerson(newPerson, this.token).subscribe({
+  const newPerson: Person = {
+    id: '',
+    identification: this.citaForm.get('cedula')?.value,
+    firstName: this.citaForm.get('nombre')?.value,
+    lastName: this.citaForm.get('apellido')?.value,
+    birthDate: formatDate(this.citaForm.get('fechaNacimiento')?.value, 'yyyy-MM-dd', "en-US"),
+    occupancy: this.citaForm.get('ocupacion')?.value
+  };
+
+    this.personService.createPerson(newPerson, this.token).pipe(
+      switchMap(() => {
+        this.snackBar.open('Paciente creado con éxito.', 'Cerrar', { duration: 3000 });
+        return this.personService.getPersonByIdentification(newPerson.identification);
+      }),
+      switchMap((personfind) => {
+        if (!this.token) {
+          this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
+          throw new Error('Token no encontrado');
+        }
+        const clinicHistory: ClinicHistorie = {
+          id: '',
+          person: personfind
+        };
+        return this.historyService.createNewHistory(clinicHistory, this.token);
+      })
+    ).subscribe({
       next: () => {
-        this.personService.getPersonByIdentification(newPerson.identification).subscribe({
-          next: (person) => {
-            this.foundPerson = person;
-            this.registrarCita(person);
-          },
-          error: () => {
-            this.snackBar.open('Error al buscar la persona recién creada.', 'Cerrar', { duration: 3000 });
-          }
-        });
+        this.snackBar.open('Historia clínica creada con éxito.', 'Cerrar', { duration: 3000 });
+        this.dialogRef.close(true); // Cierra el diálogo tras éxito
       },
-      error: () => {
-        this.snackBar.open("Error al registrar la persona. Consulte al Administrador.", 'Cerrar', { duration: 3000 });
+      error: (err) => {
+        this.snackBar.open('Error al procesar la solicitud: ' + err.message, 'Cerrar', { duration: 3000 });
       }
     });
-    } else {
-      if (!this.foundPerson) {
-        this.snackBar.open('Error: no se ha encontrado una persona registrada para esta cita.', 'Cerrar', { duration: 3000 });
-        return;
-      }
-      this.registrarCita(this.foundPerson);
-      this.snackBar.open('Se ha agendado correctamente la cita', 'Cerrar', { duration: 3000 });
-    }
   }
+
+
 
   registrarCita(person: Person) {
     if (!this.token) {

@@ -16,7 +16,7 @@ import { AtencionPacienteDialog } from './crud/atencionPaciente.component';
 })
 
 export class CitasComponent implements AfterViewInit {
-  displayedColumns: string[] = ['patientname', 'date', 'hour', 'description', 'actions'];
+  displayedColumns: string[] = ['identification','patientname', 'date', 'hour', 'description', 'actions'];
   dataSource = new MatTableDataSource<AppointmentListDTO>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -40,9 +40,9 @@ export class CitasComponent implements AfterViewInit {
   }
 
   // Método para iniciar una atencion
-  editPerson(personIdentification: string) {
+  editPerson(personIdentification: string, reasonAppointment:  string) {
     const dialogRef = this.dialog.open(AtencionPacienteDialog, {
-      data: { identification: personIdentification } // Enviar la cédula
+      data: { identification: personIdentification, reason:  reasonAppointment } // Enviar la cédula
     });
 
     // Escuchar el resultado del diálogo, si es necesario

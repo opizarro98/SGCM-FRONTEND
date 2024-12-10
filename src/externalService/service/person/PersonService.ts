@@ -36,6 +36,9 @@ export class PersonService {
   // Busca una persona por su identificacion
   getPersonByIdentification(identification: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}searchPersonByIdentification/${identification}`).pipe(
+      tap((response) => {
+        console.log('Person find successfully:', response);
+      }),
       catchError(this.handleError)
     );
   }

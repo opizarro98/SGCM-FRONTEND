@@ -6,7 +6,34 @@ import { PersonService } from 'src/externalService/service/person/PersonService'
   templateUrl: './historia.component.html',
 })
 export class HistoriaComponent {
-cedula: string = '';
+     identification: string = '';
+  paciente: any = null; // Aquí se guarda el paciente buscado
+
+  buscarPaciente(): void {
+    // Simulación de la búsqueda del paciente
+    // Reemplazar esto con una llamada al servicio que devuelva los datos reales del paciente
+    const mockPaciente = {
+      firstName: 'Abdon Geova',
+      lastName: 'Intriago Giler',
+      birthDate: '1998-11-12',
+      occupancy: 'Estudiante'
+    };
+    this.paciente = mockPaciente; // Asignar los datos del paciente
+  }
+
+  calcularEdad(birthDate: string): number {
+    const birth = new Date(birthDate);
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDifference = today.getMonth() - birth.getMonth();
+
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+    return age;
+  }
+}
+/*cedula: string = '';
     persona: any;
     citas: any[] = [];
     selectedCita: any;
@@ -44,3 +71,4 @@ cedula: string = '';
         }
     }
 }
+*/
