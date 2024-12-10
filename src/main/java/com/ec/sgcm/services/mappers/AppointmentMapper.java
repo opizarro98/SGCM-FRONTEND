@@ -6,6 +6,7 @@ import com.ec.sgcm.model.dto.AppointmentDTO;
 public class AppointmentMapper {
     public static AppointmentDTO toDTO(Appointments appointment) {
         AppointmentDTO dto = new AppointmentDTO();
+        dto.setIdentification(appointment.getPerson().getIdentification());
         dto.setPatientname(appointment.getPerson().getFirstName() + " " + appointment.getPerson().getLastName());
         dto.setDate(appointment.getDate());
         dto.setHour(appointment.getHour());
