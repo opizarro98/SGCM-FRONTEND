@@ -6,21 +6,44 @@ import { PersonService } from 'src/externalService/service/person/PersonService'
   templateUrl: './historia.component.html',
 })
 export class HistoriaComponent {
-     identification: string = '';
+  identification: string = '';
   paciente: any = null; // Aquí se guarda el paciente buscado
+  token: string | null = null;
+  attentions: any[] = []; // Lista de atenciones para el acordeón
 
-  buscarPaciente(): void {
-    // Simulación de la búsqueda del paciente
-    // Reemplazar esto con una llamada al servicio que devuelva los datos reales del paciente
-    const mockPaciente = {
-      firstName: 'Abdon Geova',
-      lastName: 'Intriago Giler',
-      birthDate: '1998-11-12',
-      occupancy: 'Estudiante'
-    };
-    this.paciente = mockPaciente; // Asignar los datos del paciente
+  
+    constructor(private personService: PersonService) {
+    this.token = localStorage.getItem('token');
+   }
+
+  buscarPaciente() {
+    if (!this.identification) {
+      console.error('La cédula no puede estar vacía');
+      return;
+    }
+    
+
+    this.personService.getPersonByIdentification(this.identification).subscribe({
+      next: (person) => {
+        this.paciente = {
+          id: person.id,
+          firstName: person.firstName,
+          lastName: person.lastName,
+          birthDate: person.birthDate,
+          occupancy: person.occupancy,
+          history: person.history,
+          appointments: person.appointments
+        };
+
+        this.attentions = person.history?.attentions || []; // Obtener lista de atenciones
+      },
+      error: () => {
+        console.error('Error al buscar la persona');
+        this.paciente = null;
+        this.attentions = [];
+      }
+    });
   }
-
   calcularEdad(birthDate: string): number {
     const birth = new Date(birthDate);
     const today = new Date();
@@ -33,42 +56,3 @@ export class HistoriaComponent {
     return age;
   }
 }
-/*cedula: string = '';
-    persona: any;
-    citas: any[] = [];
-    selectedCita: any;
-    diagnostico: string = '';
-    antecedentes: string = '';
-
-    constructor(private personService: PersonService){}//, private citasService: CitasService) {}
-
-    ngOnInit(): void {}
-
-    buscarPersona() {
-        this.personService.getPersonByIdentification(this.cedula).subscribe(
-            (data) => {
-                this.persona = data;
-                //  this.cargarCitas();
-            },
-            (error) => {
-                console.error('Persona no encontrada');
-            }
-        );
-    }
-
-    // cargarCitas() {
-    //     if (this.persona) {
-    //         this.citasService.getCitasByPersonaId(this.persona.id).subscribe((data) => {
-    //             this.citas = data;
-    //         });
-    //     }
-    // }
-
-    cargarDetallesCita() {
-        if (this.selectedCita) {
-            this.diagnostico = this.selectedCita.diagnostico;
-            this.antecedentes = this.selectedCita.antecedentes;
-        }
-    }
-}
-*/

@@ -1,11 +1,6 @@
 <mat-card class="cardWithShadow theme-card">
     <mat-card-header class="d-flex justify-content-between align-items-center">
         <mat-card-title class="text-start">Historia Clínica</mat-card-title>
-        <div class="col-sm-2">
-            <button mat-flat-button color="primary" mat-button>
-                Nueva Consulta
-            </button>
-        </div>
     </mat-card-header>
 
     <mat-divider></mat-divider>
@@ -14,7 +9,9 @@
         <div class="row">
             <div class="col-lg-12">
                 <mat-card class="b-1 shadow-none">
-                    <mat-card-header class="d-flex align-items-start">
+                <mat-card-header class="d-flex flex-column align-items-start">
+                    <!-- Input de cédula -->
+                    <div class="row w-100">
                         <mat-form-field appearance="outline" class="example-full-width col-sm-8">
                             <mat-label>Buscar paciente</mat-label>
                             <input matInput placeholder="Ingrese la cédula del paciente" [(ngModel)]="identification">
@@ -23,39 +20,51 @@
                             <i-tabler class="routeIcon" name="Search" matListItemIcon></i-tabler>
                             Buscar
                         </button>
-                    </mat-card-header>
-
-                    <mat-card-header class="d-flex align-items-start">
-                        <mat-form-field appearance="outline" class="example-full-width col-sm-8">
-                            
-                        </mat-form-field>
-                        <!-- Datos del paciente -->
-                        <div *ngIf="paciente" class="row mt-3">
-                            <div class="col-md-6">
-                                <p><strong>Nombre:</strong> {{ paciente.firstName }} {{ paciente.lastName }}</p>
-                                <p><strong>Fecha de Nacimiento:</strong> {{ paciente.birthDate | date: 'dd/MM/yyyy' }}</p>
-                            </div>
-                            <div class="col-md-6">
-                                <p><strong>Edad:</strong> {{ calcularEdad(paciente.birthDate) }} años</p>
-                                <p><strong>Ocupación:</strong> {{ paciente.occupancy }}</p>
-                            </div>
+                    </div>
+                
+                    <!-- Información del paciente alineada debajo del input -->
+                    <div *ngIf="paciente" class="row w-100 mt-2">
+                        <div class="col-sm-8">
+                            <p><strong>Nombre:</strong> {{ paciente.firstName }} {{ paciente.lastName }}</p>
+                            <p><strong>Fecha de Nacimiento:</strong> {{ paciente.birthDate | date: 'dd/MM/yyyy' }}</p>
                         </div>
-                    </mat-card-header>
+                        <div class="col-md-6">
+                            <p><strong>Edad:</strong> {{ calcularEdad(paciente.birthDate) }} años</p>
+                            <p><strong>Ocupación:</strong> {{ paciente.occupancy }}</p>
+                        </div>
+                    </div>
+                </mat-card-header>
+
                 </mat-card>
-                <mat-card-content class="b-t-1 mt-3">
+                <mat-card-content class="b-t-1 mt-3" *ngFor="let attention of attentions">
                     <div class="row">
                         <!-- Columna izquierda con el acordeón de citas -->
                         <div class="col-md-6">
                             <mat-accordion class="example-headers-align" multi>
-                                <mat-expansion-panel>
+                                <mat-expansion-panel >
                                     <mat-expansion-panel-header>
-                                        <mat-panel-title>23/04/2024</mat-panel-title>
+                                        <mat-panel-title>
+                                            <h4>Fecha de Atención:</h4>
+                                        </mat-panel-title>
                                         <mat-panel-description>
-                                            Motivo de la consulta: asdasdsadas
-                                            <mat-icon>date_range</mat-icon>
+                                            {{attention.dateAttention}}
                                         </mat-panel-description>
                                     </mat-expansion-panel-header>
+
+                                    <div>
+                                        <h4>Motivo de la consulta</h4>
+                                        <p>{{ attention.reason }} <!-- Razon actual --></p>
+                                    </div>
+                                    <div>
+                                        <h4>Estado actual:</h4>
+                                        <p>{{ attention.currentStatus }}</p>
+                                    </div>
+                    
                                     <!-- Contenido del panel de expansión -->
+                                    <div>
+                                        <h4>Tarea de Intercesión:</h4>
+                                        <p>{{ attention.intersessionTask }}</p>
+                                    </div>
                                 </mat-expansion-panel>
                             </mat-accordion>
                         </div>
@@ -64,12 +73,12 @@
                         <div class="col-md-6">
                             <mat-form-field appearance="outline" class="w-100 mb-3">
                                 <mat-label>Antecedentes</mat-label>
-                                <textarea matInput rows="5" placeholder="Ingrese los antecedentes..."></textarea>
+                                <textarea matInput rows="5" placeholder="Antecedentes Actual"></textarea>
                             </mat-form-field>
 
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Diagnóstico</mat-label>
-                                <textarea matInput rows="5" placeholder="Ingrese el diagnóstico..."></textarea>
+                                <textarea matInput rows="5" [readonly]="true" placeholder="Diagnóstico Actual">{{ paciente.history?.currentDiagnosis || 'Sin diagnóstico registrado' }}</textarea> 
                             </mat-form-field>
                         </div>
                     </div>

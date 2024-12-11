@@ -118,48 +118,67 @@ export class NuevaCitaDialog {
   }
 
   onSubmit() {
-  if (!this.token) {
-    this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
-    return;
-  }
+    if (!this.token) {
+      this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
+      return;
+    }
 
-  const newPerson: Person = {
-    id: '',
-    identification: this.citaForm.get('cedula')?.value,
-    firstName: this.citaForm.get('nombre')?.value,
-    lastName: this.citaForm.get('apellido')?.value,
-    birthDate: formatDate(this.citaForm.get('fechaNacimiento')?.value, 'yyyy-MM-dd', "en-US"),
-    occupancy: this.citaForm.get('ocupacion')?.value
-  };
+    const cedula = this.citaForm.get('cedula')?.value;
 
-    this.personService.createPerson(newPerson, this.token).pipe(
-      switchMap(() => {
-        this.snackBar.open('Paciente creado con éxito.', 'Cerrar', { duration: 3000 });
-        return this.personService.getPersonByIdentification(newPerson.identification);
-      }),
-      switchMap((personfind) => {
-        if (!this.token) {
-          this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
-          throw new Error('Token no encontrado');
+    // Si la persona ya está registrada, solo rellenamos los campos del formulario
+    if (this.isUserRegistered && this.foundPerson) {
+      this.snackBar.open('Persona encontrada. Rellenando datos del formulario...', 'Cerrar', { duration: 3000 });
+      this.citaForm.patchValue({
+        nombre: this.foundPerson.firstName,
+        apellido: this.foundPerson.lastName,
+        fechaNacimiento: this.foundPerson.birthDate,
+        ocupacion: this.foundPerson.occupancy,
+      });
+
+      // Registrar la cita con la persona encontrada
+      this.registrarCita(this.foundPerson);
+    } else {
+      // Si la persona no está registrada, creamos una nueva
+      const newPerson: Person = {
+        id: '',
+        identification: cedula,
+        firstName: this.citaForm.get('nombre')?.value,
+        lastName: this.citaForm.get('apellido')?.value,
+        birthDate: formatDate(this.citaForm.get('fechaNacimiento')?.value, 'yyyy-MM-dd', "en-US"),
+        occupancy: this.citaForm.get('ocupacion')?.value
+      };
+
+      this.personService.createPerson(newPerson, this.token).pipe(
+        switchMap(() => {
+          this.snackBar.open('Paciente creado con éxito.', 'Cerrar', { duration: 3000 });
+          return this.personService.getPersonByIdentification(newPerson.identification);
+        }),
+        switchMap((personfind) => {
+          if (!this.token) {
+            this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
+            throw new Error('Token no encontrado');
+          }
+          const clinicHistory: ClinicHistorie = {
+            id: '',
+            person: personfind
+          };
+          return this.historyService.createNewHistory(clinicHistory, this.token);
+        })
+      ).subscribe({
+        next: (personfind) => {
+          this.snackBar.open('Historia clínica creada con éxito.', 'Cerrar', { duration: 3000 });
+
+          // Registrar la cita con la persona creada
+          this.registrarCita(personfind);
+
+          this.dialogRef.close(true); // Cierra el diálogo tras éxito
+        },
+        error: (err) => {
+          this.snackBar.open('Error al procesar la solicitud: ' + err.message, 'Cerrar', { duration: 3000 });
         }
-        const clinicHistory: ClinicHistorie = {
-          id: '',
-          person: personfind
-        };
-        return this.historyService.createNewHistory(clinicHistory, this.token);
-      })
-    ).subscribe({
-      next: () => {
-        this.snackBar.open('Historia clínica creada con éxito.', 'Cerrar', { duration: 3000 });
-        this.dialogRef.close(true); // Cierra el diálogo tras éxito
-      },
-      error: (err) => {
-        this.snackBar.open('Error al procesar la solicitud: ' + err.message, 'Cerrar', { duration: 3000 });
-      }
-    });
+      });
+    }
   }
-
-
 
   registrarCita(person: Person) {
     if (!this.token) {
