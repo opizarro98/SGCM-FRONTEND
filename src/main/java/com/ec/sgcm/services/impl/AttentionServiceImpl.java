@@ -1,5 +1,7 @@
 package com.ec.sgcm.services.impl;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ public class AttentionServiceImpl implements AttentionService {
 
     @Override
     public Attentions createNewAttentio(Attentions attention) {
+        attention.setDateAttention(LocalDate.now());
         return attentionRepo.save(attention);
     }
 

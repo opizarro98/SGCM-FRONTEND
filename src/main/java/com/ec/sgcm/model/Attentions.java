@@ -1,5 +1,7 @@
 package com.ec.sgcm.model;
 
+import java.time.LocalDate;
+
 import org.hibernate.annotations.Comment;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -28,8 +30,12 @@ public class Attentions {
     private Long id;
 
     @Column(nullable = false)
-    @Comment("motivo de la consulta")
+    @Comment("Motivo de la consulta")
     private String reason;
+
+    @Column(nullable = false)
+    @Comment("Fecha de la atencion")
+    private LocalDate dateAttention;
 
     @Comment("Estado actual del paciente")
     @Column(name = "current_status", nullable = false)
