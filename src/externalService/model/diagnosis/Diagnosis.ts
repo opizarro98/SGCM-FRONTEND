@@ -1,8 +1,9 @@
-import { Category } from "../category/Category";
-
 export interface Diagnosis {
-  id:string;
-  code: string;
+  id: string;
   name: string;
-  category:Category;
+  code:string;
+  category: {
+    id: string;
+    name: string;
+  };
 }

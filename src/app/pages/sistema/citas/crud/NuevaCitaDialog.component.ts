@@ -107,12 +107,6 @@ export class NuevaCitaDialog {
           this.citaForm.enable();
           this.snackBar.open('Usuario no registrado', 'Cerrar', { duration: 3000 });
           this.foundPerson = null;
-        // if (error === 'Error interno del servidor') {
-        //   // Usuario no registrado, habilitamos el formulario
-        //  // Habilita el formulario para llenar los datos
-        // } else {
-          
-        // }
       }
     });
   }

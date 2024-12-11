@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, tap, map, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { environment } from 'src/enviroments/environment';
 import { Category } from 'src/externalService/model/category/Category';
 
@@ -13,47 +14,49 @@ export class CategoryService {
 
   constructor(private http: HttpClient) { }
 
-  // Lista todas las categorias
-  getCategory(): Observable<any> {
-    return this.http.get<any>(this.apiUrl + "searchForAllCategorie");
+  // Lista todas las categorías
+  getCategory(): Observable<Category[]> {
+    return this.http.get<Category[]>(this.apiUrl + "searchForAllCategorie").pipe(
+      catchError(this.handleError)
+    );
   }
 
-
-  // Crea nuevo categoria
-  createNewCategory(category: Category, token: string): Observable<any> {
+  // Crea una nueva categoría
+  createNewCategory(category: Category, token: string): Observable<Category> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.post<any>(`${this.apiUrl}createNewCategories`, category, { headers }).pipe(
+    return this.http.post<Category>(`${this.apiUrl}createNewCategories`, category, { headers }).pipe(
       tap((response) => {
-        console.log('category created successfully:', response);
+        console.log('Categoría creada exitosamente:', response);
       }),
       catchError(this.handleError)
     );
   }
 
-  // Busca una categoria por su codigo
-  getCategoryByCode(code: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}searchCategorieForCode/${code}`).pipe(
+  // Busca una categoría por su código
+  getCategoryByCode(code: string): Observable<Category> {
+    return this.http.get<Category>(`${this.apiUrl}searchCategorieForCode/${code}`).pipe(
       catchError(this.handleError)
     );
   }
 
+  // Manejo de errores
   private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'An unknown error occurred!';
+    let errorMessage = 'Ocurrió un error desconocido.';
 
     if (error.error instanceof ErrorEvent) {
       // Error del lado del cliente
-      errorMessage = `Error: ${error.error.message}`;
+      errorMessage = `Error del cliente: ${error.error.message}`;
     } else {
       // Error del lado del servidor
       switch (error.status) {
         case 404:
-          errorMessage = 'Usuario no registrado';
+          errorMessage = 'Categoría no encontrada.';
           break;
         case 500:
-          errorMessage = 'Error en el servidor, inténtelo más tarde';
+          errorMessage = 'Error en el servidor, inténtelo más tarde.';
           break;
         default:
           errorMessage = `Error: ${error.message}`;

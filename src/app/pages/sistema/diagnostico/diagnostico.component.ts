@@ -1,14 +1,16 @@
-import {Component, ViewChild} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatTableDataSource} from '@angular/material/table';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {Observable, tap, throwError} from 'rxjs';
+import { Component, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Observable, throwError, tap } from 'rxjs';
 import { DiagnosisService } from 'src/externalService/service/diagnosis/DiagnosisService';
 import { Diagnosis } from 'src/externalService/model/diagnosis/Diagnosis';
 import { NuevoDiagnosticoDialog } from './crud/nuevoDiagnosticoDialog.component';
-import {EditarDiagnosisDialog} from './crud/editarDiagnosticoDialog.component';
+import { EditarDiagnosisDialog } from './crud/editarDiagnosticoDialog.component';
 import { DiagnosisDTO } from 'src/externalService/model/diagnosis/DiagnosisDTO';
+import { Category } from 'src/externalService/model/category/Category';
+import { CategoryService } from 'src/externalService/service/category/CategoryService';
 
 @Component({
   selector: 'app-diagnostico',
@@ -18,24 +20,45 @@ export class DiagnosticoComponent {
   displayedColumns: string[] = ['code', 'name', 'category', 'actions'];
   dataSource = new MatTableDataSource<DiagnosisDTO>();
 
-  // Mapeo para los filtros de cada columna
-  columnFilters: { [key: string]: string } = {};
-  token: string | null = null;
+  categories: Category[] = []; // Lista de categorías
+  selectedCategoryId: string = ''; // ID de categoría seleccionada para filtrar
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private diagnosiservice: DiagnosisService, private dialog: MatDialog, private snackBar: MatSnackBar,) {
-    this.token = localStorage.getItem('token');
-   }
+  constructor(
+    private diagnosisService: DiagnosisService,
+    private categoryService: CategoryService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-    this.loadAllDiagnosis();
+    this.loadAllData();
   }
 
+  // Carga diagnósticos y categorías
+  loadAllData() {
+    this.loadAllDiagnosis();
+    this.loadCategories();
+  }
+
+  // Cargar diagnósticos
   loadAllDiagnosis() {
-    this.diagnosiservice.getDiagnosis().subscribe((diagnosis) => {
-      this.dataSource.data = diagnosis;
+    this.diagnosisService.getDiagnosis().subscribe((diagnosis: Diagnosis[]) => {
+      this.dataSource.data = diagnosis.map((diag: Diagnosis) => ({
+        id: diag.id, // Mapea `id` tal cual
+        code: diag.code, // Mapea `code` tal cual
+        name: diag.name, // Mapea `name` tal cual
+        category: diag.category?.name || 'Sin categoría', // Convierte el objeto `category` a un string
+      }));
+    });
+  }
+
+  // Cargar categorías
+  loadCategories() {
+    this.categoryService.getCategory().subscribe((categories) => {
+      this.categories = categories;
     });
   }
 
@@ -45,27 +68,37 @@ export class DiagnosticoComponent {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  // Método para editar un diagnostico
-  editdiagnosis(diagnosisCode: string) {
+  // Filtro por categoría
+  applyCategoryFilter() {
+    if (this.selectedCategoryId) {
+      this.dataSource.data = this.dataSource.data.filter(
+        (diagnosis) => diagnosis.category === this.selectedCategoryId
+      );
+    } else {
+      this.loadAllDiagnosis(); // Recarga todos los diagnósticos
+    }
+  }
+
+  // Método para editar un diagnóstico
+  editDiagnosis(diagnosisCode: string) {
     const dialogRef = this.dialog.open(EditarDiagnosisDialog, {
-      data: { identification: diagnosisCode } // Enviar la cédula
+      data: { identification: diagnosisCode },
     });
 
-    // Escuchar el resultado del diálogo, si es necesario
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.loadAllDiagnosis();
-        console.log("Diagnostico Actualizado");
+        console.log('Diagnóstico actualizado');
       }
     });
   }
 
-  // Método para eliminar un diagnostico
-  deletediagnosis(diagnosis: Diagnosis) {
-    
+  // Método para eliminar un diagnóstico
+  deleteDiagnosis(diagnosis: Diagnosis) {
+    // Implementa lógica de eliminación aquí
   }
 
-  // Metodo para abrir el dialog
+  // Método para abrir el diálogo de nuevo diagnóstico
   openDialog() {
     const dialogRef = this.dialog.open(NuevoDiagnosticoDialog);
 
@@ -76,17 +109,26 @@ export class DiagnosticoComponent {
     });
   }
 
-  //Metodo para buscar un diagnostico
-  buscardiagnosisa(code: string): Observable<Diagnosis> {
-  if (!this.token) {
-    this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
-    return throwError('Token no encontrado');
-  }
+  // Método para buscar un diagnóstico por código
+  searchDiagnosisByCode(code: string): Observable<Diagnosis> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      this.snackBar.open(
+        'Error: token no encontrado. Por favor, inicie sesión nuevamente.',
+        'Cerrar',
+        { duration: 3000 }
+      );
+      return throwError('Token no encontrado');
+    }
 
-  return this.diagnosiservice.getDiagnosisByCode(code).pipe(
-    tap((diagnosisFind: Diagnosis) => {
-      this.snackBar.open('El diagnostico ya se encuentra registrado', 'Cerrar', { duration: 3000 });
-    })
-  );
-}
+    return this.diagnosisService.getDiagnosisByCode(code).pipe(
+      tap((diagnosisFind: Diagnosis) => {
+        this.snackBar.open(
+          'El diagnóstico ya se encuentra registrado',
+          'Cerrar',
+          { duration: 3000 }
+        );
+      })
+    );
+  }
 }

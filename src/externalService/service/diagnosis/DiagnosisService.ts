@@ -15,8 +15,8 @@ export class DiagnosisService {
   constructor(private http: HttpClient) { }
 
   // Lista todas los diagnosticos
-  getDiagnosis(): Observable<any> {
-    return this.http.get<any>(this.apiUrl + "searchForAllDiagnosis");
+  getDiagnosis(): Observable<Diagnosis[]> {
+    return this.http.get<Diagnosis[]>(`${this.apiUrl}/getAllDiagnosis`);
   }
 
 
