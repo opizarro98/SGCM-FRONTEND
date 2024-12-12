@@ -16,7 +16,7 @@ import { AtencionPacienteDialog } from './crud/atencionPaciente.component';
 })
 
 export class CitasComponent implements AfterViewInit {
-  displayedColumns: string[] = ['identification','patientname', 'date', 'hour', 'description', 'actions'];
+  displayedColumns: string[] = ['identification','patientname', 'date', 'hour','actions'];
   dataSource = new MatTableDataSource<AppointmentListDTO>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

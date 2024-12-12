@@ -27,7 +27,7 @@ export class LoginService {
   login(credentials: LoginRequest): Observable<any> {
     return this.http.post<any>(environment.urlHost + "auth/login", credentials).pipe(
       tap((userData) => {
-        console.log("Token recibido:", userData.token);  // Depuración para asegurar que recibimos el token
+        //console.log("Token recibido:", userData.token);  // Depuración para asegurar que recibimos el token
         // Guardamos el token en ambos storages
         sessionStorage.setItem("token", userData.token);
         localStorage.setItem("token", userData.token);
