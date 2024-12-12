@@ -137,7 +137,7 @@ onSubmit() {
       })
     ).subscribe({
       next: () => {
-        this.snackBar.open('Historia clínica creada con éxito.', 'Cerrar', { duration: 3000 });
+        this.snackBar.open('Paciente creado con éxito.', 'Cerrar', { duration: 3000 });
         this.dialogRef.close(true); // Cierra el diálogo tras éxito
       },
       error: (err) => {

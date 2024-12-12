@@ -89,33 +89,4 @@ export class NuevoDiagnosticoDialog {
       }
     });
   }
-
-
-  onSubmit() {
-  //   if (!this.token) {
-  //     this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
-  //     return;
-  //   }
-  //   const newCategory: Category = {
-  //     id: '',
-  //     code: this.diagnosisForm.get('codigo')?.value,
-  //     name: this.diagnosisForm.get('nombre')?.value
-  //   };
-  //   const newDiagnosis: Diagnosis = {
-  //     id: '',
-  //     code: this.diagnosisForm.get('codigo')?.value,
-  //     name: this.diagnosisForm.get('nombre')?.value,
-  //     category: newCategory
-  //   };
-  //   this.diagnosisService.createNewDiagnosis(newDiagnosis, this.token).subscribe({
-  //     next: () => {
-  //       this.snackBar.open('Dagnostico creado con exito.', 'Cerrar', { duration: 3000 });
-  //       this.dialogRef.close(true);
-  //     },
-  //     error: () => {
-  //       this.snackBar.open("Error al registrar el paciente. Consulte al Administrador.", 'Cerrar', { duration: 3000 });
-  //     }
-  //   });
-  // }
-
-}}
+}

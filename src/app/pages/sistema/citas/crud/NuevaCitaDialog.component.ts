@@ -160,7 +160,7 @@ export class NuevaCitaDialog {
         })
       ).subscribe({
         next: (personfind) => {
-          this.snackBar.open('Historia clínica creada con éxito.', 'Cerrar', { duration: 3000 });
+          this.snackBar.open('Cita medica creada con éxito.', 'Cerrar', { duration: 3000 });
 
           // Registrar la cita con la persona creada
           this.registrarCita(personfind);
