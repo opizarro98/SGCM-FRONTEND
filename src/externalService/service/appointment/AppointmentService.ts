@@ -30,6 +30,20 @@ export class AppointmentService {
     );
   }
 
+  canceledAppointment(id: string, token: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    // Incluye el ID como parte de la URL
+    return this.http.put<any>(`${this.apiUrl}canceledAppointment/${id}`, null, { headers }).pipe(
+      tap((response) => {
+        console.log('Appointment canceled successfully:', response);
+      }),
+      catchError(this.handleError)
+    );
+  }
+
     private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An unknown error occurred!';
     

@@ -1,4 +1,5 @@
 export interface AppointmentListDTO {
+  id:string
   identification:string;
   patientname: string;
   date: string;

@@ -6,7 +6,7 @@
         <!-- Filtro alineado a la derecha -->
         <div class="col-sm-2">
             <button mat-flat-button color="primary" #tooltip="matTooltip" matTooltip="Registrar Paciente"
-                matTooltipPosition="right" matTooltipHideDelay="100000" mat-button (click)="openDialog()">
+                matTooltipPosition="right" matTooltipHideDelay="100000" mat-button (click)="nuevaCitaDialog()">
                 Agendar Cita
             </button>
         </div>
@@ -32,6 +32,11 @@
                         <div class="table-responsive">
                             <!-- Añadido para hacer la tabla desplazable en pantallas pequeñas -->
                             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                                <!-- identificacion del Paciente -->
+                                <ng-container matColumnDef="id">
+                                    <th mat-header-cell *matHeaderCellDef> ID </th>
+                                    <td mat-cell *matCellDef="let appointment"> {{appointment.id}} </td>
+                                </ng-container>
 
                                 <!-- identificacion del Paciente -->
                                 <ng-container matColumnDef="identification">
@@ -61,11 +66,11 @@
                                 <ng-container matColumnDef="actions">
                                     <th mat-header-cell *matHeaderCellDef> Acciones </th>
                                     <td mat-cell *matCellDef="let appointment">
-                                        <button mat-stroked-button color="primary" (click)="editPerson(appointment.identification, appointment.reason)" style="margin-right: 8px;">
+                                        <button mat-stroked-button color="primary" (click)="atenderCita(appointment.identification, appointment.reason)" style="margin-right: 8px;">
                                             <i-tabler class="routeIcon" name="health-recognition" matListItemIcon></i-tabler>
                                             Iniciar
                                         </button>
-                                        <button mat-stroked-button color="warn" (click)="deletePerson(appointment)">
+                                        <button mat-stroked-button color="warn" (click)="cancelarCita(appointment.id)">
                                             <i-tabler class="routeIcon" name="calendar-x" matListItemIcon></i-tabler>
                                             Cancelar
                                         </button>

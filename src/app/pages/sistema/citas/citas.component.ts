@@ -7,6 +7,7 @@ import { AppointmentListDTO } from 'src/externalService/model/appointment/Appint
 import { NuevaCitaDialog } from './crud/NuevaCitaDialog.component';
 import {Person} from 'src/externalService/model/person/Person';
 import { AtencionPacienteDialog } from './crud/atencionPaciente.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -16,12 +17,16 @@ import { AtencionPacienteDialog } from './crud/atencionPaciente.component';
 })
 
 export class CitasComponent implements AfterViewInit {
-  displayedColumns: string[] = ['identification','patientname', 'date', 'hour','actions'];
+  displayedColumns: string[] = ['id','identification','patientname', 'date', 'hour','actions'];
   dataSource = new MatTableDataSource<AppointmentListDTO>();
+  token: string | null = null;
+  
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private appointmentsService: AppointmentService,private dialog:MatDialog) {}
+  constructor(private appointmentsService: AppointmentService,private dialog:MatDialog,private snackBar: MatSnackBar) {
+     this.token = localStorage.getItem('token');
+  }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -40,7 +45,7 @@ export class CitasComponent implements AfterViewInit {
   }
 
   // Método para iniciar una atencion
-  editPerson(personIdentification: string, reasonAppointment:  string) {
+  atenderCita(personIdentification: string, reasonAppointment:  string) {
     const dialogRef = this.dialog.open(AtencionPacienteDialog, {
       data: { identification: personIdentification, reason:  reasonAppointment } // Enviar la cédula
     });
@@ -54,6 +59,23 @@ export class CitasComponent implements AfterViewInit {
     });
   }
 
+  cancelarCita(id: string) {
+
+    if (!this.token) {
+      this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
+      return;
+    }
+   this.appointmentsService.canceledAppointment(id, this.token).subscribe({
+      next: () => {
+        this.loadAppointments();
+        this.snackBar.open('La cita fue cancalada exitosamente.', 'Cerrar', { duration: 3000 });
+      },
+      error: () => {
+        this.snackBar.open("Error al cancelar la cita. Consulte al Administrador.", 'Cerrar', { duration: 3000 });
+      }
+    });
+  }
+
   // Método para eliminar una persona
   deletePerson(person: Person) {
     
@@ -61,7 +83,7 @@ export class CitasComponent implements AfterViewInit {
 
 
 
-  openDialog() {
+  nuevaCitaDialog() {
     const dialogRef = this.dialog.open(NuevaCitaDialog);
 
     dialogRef.afterClosed().subscribe((result: any | null) => {
