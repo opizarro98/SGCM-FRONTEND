@@ -9,6 +9,8 @@ public interface AppointmentService {
 
     Appointments createAppointment(Appointments appointment);
 
+    Appointments canceledAppointment(Long idAppointment);
+
     Appointments updateAppointment(Appointments appointment);
 
     List<AppointmentDTO> getAllAppointments();

@@ -3,6 +3,8 @@ package com.ec.sgcm.model;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import org.hibernate.annotations.Comment;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
@@ -24,6 +26,7 @@ public class Appointments {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "appointment_id")
+    @Comment("ID de la cita media, campo autoincrementable")
     private Long id;
 
     @ManyToOne
@@ -32,11 +35,18 @@ public class Appointments {
     private Persons person;
 
     @Column(nullable = false)
+    @Comment("Fecha en la que agenda la cita")
     private LocalDate date;
 
     @Column(nullable = false)
+    @Comment("Hora en la que agenda la cita")
     private LocalTime hour;
 
     @Column(nullable = false)
+    @Comment("Razon por la que asiste a la consulta")
     private String reason; // Motivo de la consulta
+
+    @Column(nullable = false, name = "is_cancelled")
+    @Comment("Campo para verificar si la cita se cancelo")
+    private boolean isCancelled;
 }

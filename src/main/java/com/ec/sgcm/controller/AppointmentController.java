@@ -30,7 +30,6 @@ public class AppointmentController {
     private AppointmentService appointmentService;
 
     // Crear una nueva cita
-
     @PostMapping("/createNewAppointment")
     @ResponseBody
     public ResponseEntity<?> createNewAppointment(@RequestBody Appointments appointment) {
@@ -48,8 +47,25 @@ public class AppointmentController {
         }
     }
 
-    // Actualizar una cita existente
+    // Cancelar una cita
+    @PutMapping("/canceledAppointment/{idAppointment}")
+    @ResponseBody
+    public ResponseEntity<?> canceledAppointment(@PathVariable Long idAppointment) {
+        try {
+            Appointments newAppointment = appointmentService.canceledAppointment(idAppointment);
+            return ResponseEntity.ok().body(newAppointment);
+        } catch (IllegalArgumentException ex) {
+            ApiErrorResponse errorResponse = new ApiErrorResponse("/appointmentRest/canceledAppointment",
+                    ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            ApiErrorResponse errorResponse = new ApiErrorResponse("/appointmentRest/canceledAppointment",
+                    "Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
+    // Actualizar una cita existente
     @PutMapping("/updateAppointment")
     @ResponseBody
     public ResponseEntity<?> updateAppointment(@RequestBody Appointments appointment) {
@@ -68,7 +84,6 @@ public class AppointmentController {
     }
 
     // Obtener todas las citas
-
     @GetMapping("/getAllAppointments")
     @ResponseBody
     public ResponseEntity<?> getAllAppointments() {
@@ -83,7 +98,6 @@ public class AppointmentController {
     }
 
     // Obtener una cita por su ID
-
     @GetMapping("/getAppointmentById/{id}")
     @ResponseBody
     public ResponseEntity<?> getAppointmentById(@PathVariable Long id) {
@@ -102,7 +116,6 @@ public class AppointmentController {
     }
 
     // Eliminar una cita por su ID
-
     @DeleteMapping("/deleteAppointment/{id}")
     @ResponseBody
     public ResponseEntity<?> deleteAppointment(@PathVariable Long id) {

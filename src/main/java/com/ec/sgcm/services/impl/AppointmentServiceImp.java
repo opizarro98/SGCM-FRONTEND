@@ -24,7 +24,20 @@ public class AppointmentServiceImp implements AppointmentService {
         if (appointment == null) {
             throw new IllegalArgumentException("La cita no puede ser nula.");
         }
+        appointment.setCancelled(false);
         return appointmentRepo.save(appointment);
+    }
+
+    @Override
+    public Appointments canceledAppointment(Long idAppointment) {
+        Appointments appointmentsCanceled = appointmentRepo.findfindByID(idAppointment);
+        if (appointmentsCanceled != null) {
+            appointmentsCanceled.setCancelled(true);
+            return appointmentRepo.save(appointmentsCanceled);
+        } else {
+            throw new IllegalArgumentException("No se encontró la cita con el ID proporcionado.");
+        }
+
     }
 
     @Override
@@ -48,7 +61,7 @@ public class AppointmentServiceImp implements AppointmentService {
 
     @Override
     public List<AppointmentDTO> getAllAppointments() {
-        List<Appointments> appointments = appointmentRepo.findAll();
+        List<Appointments> appointments = appointmentRepo.findAllNotCanceled();
         return appointments.stream()
                 .map(AppointmentMapper::toDTO)
                 .collect(Collectors.toList());
@@ -67,4 +80,5 @@ public class AppointmentServiceImp implements AppointmentService {
         }
         appointmentRepo.deleteById(id);
     }
+
 }

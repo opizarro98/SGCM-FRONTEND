@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AppointmentDTO {
+    Long id;
     String identification;
     String patientname;
     LocalDate date;
