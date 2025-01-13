@@ -1,11 +1,10 @@
-<h2 mat-dialog-title>Registrar nuevo diagnostico</h2>
+<h2 mat-dialog-title>Registrar nuevo diagnóstico</h2>
 <mat-divider></mat-divider>
 <mat-dialog-content class="mat-typography">
     <form [formGroup]="diagnosisForm">
-
         <div class="row">
             <div class="col-12 col-md-6">
-                <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Codigo</mat-label>
+                <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Código</mat-label>
                 <mat-form-field appearance="outline" class="w-100" color="primary">
                     <input matInput formControlName="codigo" (blur)="buscarDiagnosis()" />
                 </mat-form-field>
@@ -14,6 +13,16 @@
                 <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Nombre</mat-label>
                 <mat-form-field appearance="outline" class="w-100" color="primary">
                     <input matInput formControlName="nombre" />
+                </mat-form-field>
+            </div>
+            <div class="col-12 col-md-6">
+                <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Categoría</mat-label>
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <mat-select formControlName="categoria">
+                        <mat-option *ngFor="let category of categories" [value]="category.id">
+                            {{ category.code }} / {{ category.name }}
+                        </mat-option>
+                    </mat-select>
                 </mat-form-field>
             </div>
         </div>
