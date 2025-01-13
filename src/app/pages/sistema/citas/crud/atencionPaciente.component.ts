@@ -5,17 +5,20 @@ import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} fr
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatNativeDateModule} from '@angular/material/core';
+import {MatNativeDateModule, MatOptionModule} from '@angular/material/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
 import {PersonService} from 'src/externalService/service/person/PersonService';
 import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Person} from 'src/externalService/model/person/Person';
-import { formatDate } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { Attentions } from 'src/externalService/model/attentions/attentions';
 import { AttentionsService } from 'src/externalService/service/attentions/attentionsService';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CategoryService } from 'src/externalService/service/category/CategoryService';
+import { Category } from 'src/externalService/model/category/Category';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'atencionPaciente',
@@ -30,12 +33,16 @@ import { HttpErrorResponse } from '@angular/common/http';
     MatDatepickerModule,
     MatNativeDateModule,
     MatIconModule,
-    MatDividerModule],
+    MatDividerModule,
+    MatSelectModule,
+    MatOptionModule,
+    CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AtencionPacienteDialog {
    personForm: FormGroup;
    historyId: number | null = null;
+   categories: Category[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -43,6 +50,7 @@ export class AtencionPacienteDialog {
     private attentionsService:  AttentionsService,
     private dialogRef: MatDialogRef<AtencionPacienteDialog>,
     private snackBar: MatSnackBar,
+    private categoryService: CategoryService,
     @Inject(MAT_DIALOG_DATA) public data: { identification: string, reason:  string}
   ) {
     this.personForm = this.fb.group({
@@ -59,7 +67,21 @@ export class AtencionPacienteDialog {
     this.buscarPersona();
   }
 
-  ngOnInit(): void {}
+    ngOnInit(): void {
+    console.log('cargo las categorias');
+    this.categoryService.getCategory().subscribe({
+      next: (data) => {
+        this.categories = data;
+        console.log(data); // Asegúrate de que los datos se impriman aquí
+      },
+      error: (err) => {
+        console.error('Error al recuperar categorías:', err);
+        this.snackBar.open('No se pudo cargar la lista de categorías.', 'Cerrar', {
+          duration: 3000,
+        });
+      },
+    });
+  }
 
   buscarPersona() {
     this.personService.getPersonByIdentification(this.data.identification).subscribe({
