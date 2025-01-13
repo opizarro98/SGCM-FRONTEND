@@ -8,7 +8,6 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
-import {AppointmentService} from 'src/externalService/service/appointment/AppointmentService';
 import {PersonService} from 'src/externalService/service/person/PersonService';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Person} from 'src/externalService/model/person/Person';
@@ -16,7 +15,6 @@ import {formatDate} from '@angular/common';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import { HistoryService } from 'src/externalService/service/history/HistoryService';
 import { switchMap } from 'rxjs';
-import { PersonListDTO } from 'src/externalService/model/person/PersonListDTO';
 import { ClinicHistorie } from 'src/externalService/model/history/ClinicHistorie';
 
 @Component({
@@ -104,20 +102,20 @@ export class NuevaPersonaDialog {
   }
 
 
-onSubmit() {
-  if (!this.token) {
-    this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
-    return;
-  }
+  onSubmit() {
+    if (!this.token) {
+      this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
+      return;
+    }
 
-  const newPerson: Person = {
-    id: '',
-    identification: this.personForm.get('cedula')?.value,
-    firstName: this.personForm.get('nombre')?.value,
-    lastName: this.personForm.get('apellido')?.value,
-    birthDate: formatDate(this.personForm.get('fechaNacimiento')?.value, 'yyyy-MM-dd', "en-US"),
-    occupancy: this.personForm.get('ocupacion')?.value
-  };
+    const newPerson: Person = {
+      id: '',
+      identification: this.personForm.get('cedula')?.value,
+      firstName: this.personForm.get('nombre')?.value,
+      lastName: this.personForm.get('apellido')?.value,
+      birthDate: formatDate(this.personForm.get('fechaNacimiento')?.value, 'yyyy-MM-dd', "en-US"),
+      occupancy: this.personForm.get('ocupacion')?.value
+    };
 
     this.personService.createPerson(newPerson, this.token).pipe(
       switchMap(() => {

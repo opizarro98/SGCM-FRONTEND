@@ -29,7 +29,7 @@ export class DiagnosticoComponent {
   @ViewChild(MatPaginator) paginatorCategories!: MatPaginator;
   @ViewChild(MatPaginator) paginatorDiagnoses!: MatPaginator;
 
-  constructor(private categoryService: CategoryService) {}
+  constructor(private categoryService: CategoryService, private dialog: MatDialog,) {}
 
   ngOnInit(): void {
     this.loadCategories();
@@ -44,6 +44,17 @@ export class DiagnosticoComponent {
       if (categories.length > 0) {
         this.selectedCategoryId = categories[0].id; // Selecciona el primer ID como predeterminado
         this.onCategoryChange(this.selectedCategoryId); // Carga los diagnósticos iniciales
+      }
+    });
+  }
+
+    // Metodo para abrir el dialog
+  openDialog() {
+    const dialogRef = this.dialog.open(NuevoDiagnosticoDialog);
+
+    dialogRef.afterClosed().subscribe((result: any | null) => {
+      if (result) {
+        this.loadCategories();
       }
     });
   }

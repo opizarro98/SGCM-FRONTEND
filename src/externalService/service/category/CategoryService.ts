@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from 'src/enviroments/environment';
 import { Category } from 'src/externalService/model/category/Category';
+import { CategoryCreate } from 'src/externalService/model/category/CategoryCreate';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class CategoryService {
   }
 
   // Crea una nueva categoría
-  createNewCategory(category: Category, token: string): Observable<Category> {
+  createNewCategory(category: CategoryCreate, token: string): Observable<Category> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });

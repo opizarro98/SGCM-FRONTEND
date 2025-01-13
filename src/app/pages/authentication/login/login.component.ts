@@ -11,7 +11,7 @@ import { LoginRequest } from 'src/externalService/service/login/LoginRequest';
 })
 export class AppSideLoginComponent {
   loginForm = this.formBuilder.group({
-    username: ['', [Validators.required]],  // Solo requerido, sin validación de email
+    username: ['', [Validators.required]],
     password: ['', [Validators.required]],
   });
 
@@ -34,8 +34,6 @@ export class AppSideLoginComponent {
           localStorage.setItem('authentication', userData);
           console.log(userData);
           this.router.navigateByUrl('/dashboard');
-          console.log("redireccion listo: /");
-          
         },
         error: (errorData) => {
           console.error(errorData);
