@@ -1,7 +1,7 @@
 <mat-card class="cardWithShadow theme-card">
     <mat-card-header class="d-flex justify-content-between align-items-center">
         <!-- Título alineado a la izquierda -->
-        <mat-card-title class="text-start">Citas</mat-card-title>
+        <mat-card-title class="text-start">Citas Medicas</mat-card-title>
 
         <!-- Filtro alineado a la derecha -->
         <div class="col-sm-2">
@@ -66,14 +66,23 @@
                                 <ng-container matColumnDef="actions">
                                     <th mat-header-cell *matHeaderCellDef> Acciones </th>
                                     <td mat-cell *matCellDef="let appointment">
-                                        <button mat-stroked-button color="primary" (click)="atenderCita(appointment.identification, appointment.reason)" style="margin-right: 8px;">
-                                            <i-tabler class="routeIcon" name="health-recognition" matListItemIcon></i-tabler>
-                                            Iniciar
-                                        </button>
-                                        <button mat-stroked-button color="warn" (click)="cancelarCita(appointment.id)">
-                                            <i-tabler class="routeIcon" name="calendar-x" matListItemIcon></i-tabler>
-                                            Cancelar
-                                        </button>
+                                        <!-- Mostrar botones solo si attended es false -->
+                                        <ng-container *ngIf="!appointment.attended">
+                                            <button mat-stroked-button color="primary"
+                                                (click)="atenderCita(appointment.identification, appointment.reason, appointment.id)"
+                                                style="margin-right: 8px;">
+                                                <i-tabler class="routeIcon" name="health-recognition" matListItemIcon></i-tabler>
+                                                Iniciar
+                                            </button>
+                                            <button mat-stroked-button color="warn" (click)="cancelarCita(appointment.id)">
+                                                <i-tabler class="routeIcon" name="calendar-x" matListItemIcon></i-tabler>
+                                                Cancelar
+                                            </button>
+                                        </ng-container>
+                                        <!-- Mensaje opcional si la cita ya fue atendida -->
+                                        <ng-container *ngIf="appointment.attended">
+                                            <span class="text-muted">Cita atendida</span>
+                                        </ng-container>
                                     </td>
                                 </ng-container>
                             

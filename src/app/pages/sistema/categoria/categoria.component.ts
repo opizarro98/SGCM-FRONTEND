@@ -28,10 +28,10 @@ export class CategoriaComponent {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-    this.loadAllPersons();
+    this.loadAllCategories();
   }
 
-  loadAllPersons() {
+  loadAllCategories() {
     this.categoryService.getCategory().subscribe((category) => {
       this.dataSource.data = category;
     });
@@ -55,10 +55,9 @@ export class CategoriaComponent {
   // Metodo para abrir el dialog
   openDialog() {
     const dialogRef = this.dialog.open(NuevaCategoriaDialog);
-
     dialogRef.afterClosed().subscribe((result: any | null) => {
       if (result) {
-        this.loadAllPersons();
+        this.loadAllCategories();
       }
     });
   }

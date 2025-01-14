@@ -19,6 +19,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CategoryService } from 'src/externalService/service/category/CategoryService';
 import { Category } from 'src/externalService/model/category/Category';
 import { MatSelectModule } from '@angular/material/select';
+import { AppointmentService } from 'src/externalService/service/appointment/AppointmentService';
 
 @Component({
   selector: 'atencionPaciente',
@@ -43,6 +44,8 @@ export class AtencionPacienteDialog {
    personForm: FormGroup;
    historyId: number | null = null;
    categories: Category[] = [];
+   diagnoses: any[] = [];
+   selectedCategoryId: number | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -50,37 +53,55 @@ export class AtencionPacienteDialog {
     private attentionsService:  AttentionsService,
     private dialogRef: MatDialogRef<AtencionPacienteDialog>,
     private snackBar: MatSnackBar,
+    private appontmentService: AppointmentService,
     private categoryService: CategoryService,
-    @Inject(MAT_DIALOG_DATA) public data: { identification: string, reason:  string}
+    @Inject(MAT_DIALOG_DATA) public data: { identification: string, reason:  string, id: string}
   ) {
-    this.personForm = this.fb.group({
-      cedula: [{ value: '', disabled: true }, [Validators.required, Validators.pattern(/^\d{10}$/)]],
-      nombre: [{ value: '', disabled: true }, Validators.required],
-      apellido: [{ value: '', disabled: true }, Validators.required],
-      fechaNacimiento: [{ value: '', disabled: true }, Validators.required],
-      ocupacion: [{ value: '', disabled: true }, Validators.required],
-      motivoConsulta: [this.data.reason, Validators.required],
+   this.personForm = this.fb.group({
+      cedula: [{ value: '', disabled: true }],
+      nombre: [{ value: '', disabled: true }],
+      apellido: [{ value: '', disabled: true }],
+      fechaNacimiento: [{ value: '', disabled: true }],
+      ocupacion: [{ value: '', disabled: true }],
+      categoria: ['', Validators.required], // Control para categoría
+      diagnosis: ['', Validators.required], // Control para diagnóstico
+      motivoConsulta: [this.data.reason,Validators.required], // Campos editables
       estadoActual: ['', Validators.required],
-      tareasInterseccion: ['', Validators.required]
+      tareasInterseccion: ['', Validators.required],
     });
 
     this.buscarPersona();
   }
 
     ngOnInit(): void {
-    console.log('cargo las categorias');
+    // Cargamos las categorías al inicializar el componente
     this.categoryService.getCategory().subscribe({
       next: (data) => {
         this.categories = data;
-        console.log(data); // Asegúrate de que los datos se impriman aquí
+        console.log('Categorías cargadas:', this.categories);
       },
       error: (err) => {
-        console.error('Error al recuperar categorías:', err);
-        this.snackBar.open('No se pudo cargar la lista de categorías.', 'Cerrar', {
-          duration: 3000,
-        });
+        console.error('Error al cargar categorías:', err);
       },
     });
+
+    // Detectar cambios en la categoría seleccionada
+    this.personForm.get('categoria')?.valueChanges.subscribe((categoryId) => {
+      this.onCategoryChange(categoryId);
+    });
+  }
+
+
+    onCategoryChange(categoryId: number): void {
+    // Filtrar diagnósticos basados en la categoría seleccionada
+    const selectedCategory = this.categories.find(
+      (category) => category.id === categoryId
+    );
+    this.diagnoses = selectedCategory ? selectedCategory.diagnoses : [];
+    console.log('Diagnósticos filtrados:', this.diagnoses);
+
+    // Resetear el diagnóstico seleccionado si la categoría cambia
+    this.personForm.get('diagnosis')?.setValue('');
   }
 
   buscarPersona() {
@@ -102,6 +123,11 @@ export class AtencionPacienteDialog {
   }
 
   onSubmit(): void {
+    console.log('Dagnosis:', this.personForm.get('diagnosis')?.value);
+    console.log('categoria:', this.personForm.get('categoria')?.value);
+    console.log('Motivo Consulta:', this.personForm.get('motivoConsulta')?.value);
+    console.log('Estado Actual:', this.personForm.get('estadoActual')?.value);
+    console.log('Tareas Intersección:', this.personForm.get('tareasInterseccion')?.value);
     if (this.personForm.valid && this.historyId !== null) {
       // Construir el objeto de tipo Attentions
       const attention: Attentions = {
@@ -114,11 +140,20 @@ export class AtencionPacienteDialog {
       // Obtener el token desde el almacenamiento local o un servicio
       const token = localStorage.getItem('token') || '';
 
+      this.appontmentService.attendedAppointment(this.data.id, token).subscribe({
+        next: (response) => {
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error al registrar la atencion', error);
+          this.snackBar.open('Error al registrar la atención', 'Cerrar', { duration: 3000 });
+        }
+      });
+
       // Llamar al servicio para crear la atención
       this.attentionsService.createAttention(attention, token).subscribe({
         next: (response) => {
           this.snackBar.open('Atención registrada correctamente', 'Cerrar', { duration: 3000 });
-          this.dialogRef.close(response);
+          this.dialogRef.close(true);
         },
         error: (error: HttpErrorResponse) => {
           console.error('Error al registrar la atención:', error);

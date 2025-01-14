@@ -5,4 +5,5 @@ export interface AppointmentListDTO {
   date: string;
   hour: string;
   description: string;
+  attended:boolean;
 }

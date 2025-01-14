@@ -35,6 +35,7 @@ export class CitasComponent implements AfterViewInit {
 
   loadAppointments() {
     this.appointmentsService.getAppointments().subscribe((appointments) => {
+      console.log('Citas cargadas:', appointments);
       this.dataSource.data = appointments;
     });
   }
@@ -45,16 +46,15 @@ export class CitasComponent implements AfterViewInit {
   }
 
   // Método para iniciar una atencion
-  atenderCita(personIdentification: string, reasonAppointment:  string) {
+  atenderCita(personIdentification: string, reasonAppointment:  string, idappointment: string) {
     const dialogRef = this.dialog.open(AtencionPacienteDialog, {
-      data: { identification: personIdentification, reason:  reasonAppointment } // Enviar la cédula
+      data: { identification: personIdentification, reason:  reasonAppointment, id: idappointment } 
     });
 
     // Escuchar el resultado del diálogo, si es necesario
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.loadAppointments
-        console.log("Atención guardad con exito");
+        this.loadAppointments();
       }
     });
   }

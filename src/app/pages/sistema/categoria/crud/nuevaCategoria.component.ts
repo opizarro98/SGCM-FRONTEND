@@ -85,6 +85,7 @@ export class NuevaCategoriaDialog {
       })
     ).subscribe((data) => {
       console.log('Datos obtenidos tras crear la categoría:', data);
+      this.dialogRef.close(true);
     });
   }
 }
