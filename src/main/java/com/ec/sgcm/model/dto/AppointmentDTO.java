@@ -15,4 +15,5 @@ public class AppointmentDTO {
     LocalDate date;
     LocalTime hour;
     String reason;
+    boolean isAttended;
 }

@@ -12,6 +12,7 @@ public class AppointmentMapper {
         dto.setDate(appointment.getDate());
         dto.setHour(appointment.getHour());
         dto.setReason(appointment.getReason());
+        dto.setAttended(appointment.isAttended());
         return dto;
     }
 }

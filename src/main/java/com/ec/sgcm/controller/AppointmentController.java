@@ -65,6 +65,24 @@ public class AppointmentController {
         }
     }
 
+    // Cancelar una cita
+    @PutMapping("/attendedAppointment/{idAppointment}")
+    @ResponseBody
+    public ResponseEntity<?> attendedAppointment(@PathVariable Long idAppointment) {
+        try {
+            Appointments newAppointment = appointmentService.attendedAppointment(idAppointment);
+            return ResponseEntity.ok().body(newAppointment);
+        } catch (IllegalArgumentException ex) {
+            ApiErrorResponse errorResponse = new ApiErrorResponse("/appointmentRest/canceledAppointment",
+                    ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            ApiErrorResponse errorResponse = new ApiErrorResponse("/appointmentRest/canceledAppointment",
+                    "Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     // Actualizar una cita existente
     @PutMapping("/updateAppointment")
     @ResponseBody

@@ -49,4 +49,8 @@ public class Appointments {
     @Column(nullable = false, name = "is_cancelled")
     @Comment("Campo para verificar si la cita se cancelo")
     private boolean isCancelled;
+
+    @Column(nullable = false, name = "is_atended")
+    @Comment("Campo para verificar si la cita se atendio")
+    private boolean isAttended;
 }
