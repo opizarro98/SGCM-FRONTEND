@@ -3,4 +3,5 @@ export interface PersonListDTO {
   fullName: string;
   birth_date: string;
   occupancy: string;
+  avatar?: string;
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders, HttpErrorResponse} from '@angular/common/http';
-import {Observable, catchError, tap, throwError} from 'rxjs';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Observable, catchError, tap, throwError } from 'rxjs';
 import { environment } from 'src/enviroments/environment';
 import { Appointment } from 'src/externalService/model/appointment/Appointment';
 
@@ -8,13 +8,17 @@ import { Appointment } from 'src/externalService/model/appointment/Appointment';
   providedIn: 'root'
 })
 export class AppointmentService {
-  
+
   private apiUrl = environment.urlHost + 'appointmentRest/';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAppointments(): Observable<any> {
-    return this.http.get<any>(this.apiUrl+"getAllAppointments");
+    return this.http.get<any>(this.apiUrl + "getAllAppointments");
+  }
+
+  getAppointmentsnotAttended(): Observable<any> {
+    return this.http.get<any>(this.apiUrl + "getAppointmentsTodaynotAttended");
   }
 
   createAppointment(cita: Appointment, token: string): Observable<any> {
@@ -26,7 +30,7 @@ export class AppointmentService {
       tap((response) => {
         console.log('appointment created successfully:', response);
       }),
-      catchError(this.handleError) 
+      catchError(this.handleError)
     );
   }
 
@@ -44,7 +48,7 @@ export class AppointmentService {
     );
   }
 
-    attendedAppointment(id: string, token: string): Observable<any> {
+  attendedAppointment(id: string, token: string): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
@@ -58,9 +62,9 @@ export class AppointmentService {
     );
   }
 
-    private handleError(error: HttpErrorResponse): Observable<never> {
+  private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An unknown error occurred!';
-    
+
     if (error.error instanceof ErrorEvent) {
       // Error del lado del cliente
       errorMessage = `Error: ${error.error.message}`;
@@ -77,7 +81,7 @@ export class AppointmentService {
           errorMessage = `Error: ${error.message}`;
       }
     }
-    
+
     console.error(errorMessage);
     return throwError(errorMessage);
   }
