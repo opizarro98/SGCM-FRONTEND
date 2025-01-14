@@ -115,6 +115,20 @@ public class AppointmentController {
         }
     }
 
+    // Obtener todas las citas
+    @GetMapping("/getAppointmentsTodaynotAttended")
+    @ResponseBody
+    public ResponseEntity<?> getAppointmentsTodaynotAttended() {
+        try {
+            List<AppointmentDTO> appointmentsList = appointmentService.getAppointmentsTodaynotAttended();
+            return ResponseEntity.ok().body(appointmentsList);
+        } catch (Exception ex) {
+            ApiErrorResponse errorResponse = new ApiErrorResponse("/appointmentRest/getAllAppointments",
+                    "Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     // Obtener una cita por su ID
     @GetMapping("/getAppointmentById/{id}")
     @ResponseBody

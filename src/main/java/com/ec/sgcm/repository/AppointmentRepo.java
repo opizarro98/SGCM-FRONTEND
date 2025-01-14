@@ -1,5 +1,6 @@
 package com.ec.sgcm.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +17,7 @@ public interface AppointmentRepo extends JpaRepository<Appointments, Long> {
 
     @Query("FROM Appointments WHERE  isCancelled = false")
     public List<Appointments> findAllNotCanceled();
+
+    @Query("FROM Appointments WHERE  isAttended = false and date = :today ORDER BY hour ASC")
+    public List<Appointments> findAppointmentTodayNotAttended(LocalDate today);
 }

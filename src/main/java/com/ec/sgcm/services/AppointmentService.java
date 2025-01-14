@@ -17,6 +17,8 @@ public interface AppointmentService {
 
     List<AppointmentDTO> getAllAppointments();
 
+    List<AppointmentDTO> getAppointmentsTodaynotAttended();
+
     Appointments getAppointmentById(Long id);
 
     void deleteAppointment(Long id);

@@ -1,5 +1,6 @@
 package com.ec.sgcm.services.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -74,6 +75,15 @@ public class AppointmentServiceImp implements AppointmentService {
     @Override
     public List<AppointmentDTO> getAllAppointments() {
         List<Appointments> appointments = appointmentRepo.findAllNotCanceled();
+        return appointments.stream()
+                .map(AppointmentMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AppointmentDTO> getAppointmentsTodaynotAttended() {
+        LocalDate fechaActual = LocalDate.now();
+        List<Appointments> appointments = appointmentRepo.findAppointmentTodayNotAttended(fechaActual);
         return appointments.stream()
                 .map(AppointmentMapper::toDTO)
                 .collect(Collectors.toList());
