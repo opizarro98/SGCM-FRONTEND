@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ec.sgcm.model.Antecedents;
+import com.ec.sgcm.model.Persons;
 import com.ec.sgcm.repository.AntecedentsRepo;
 import com.ec.sgcm.services.AntecedentsService;
 
@@ -39,9 +40,16 @@ public class AntecedentsServiceImpl implements AntecedentsService {
     }
 
     @Override
-    public Antecedents getAntecedentById(Long id) {
-        return antecedentsRepo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("No se encontró el antecedente con el ID: " + id));
+    public Antecedents getAntecedentByIdPerson(Long idperson) {
+        // Antecedents findAntecedents = antecedentsRepo.findByIdPerson(idperson);
+        // if (findAntecedents != null) {
+        // return findAntecedents;
+        // } else {
+        // throw new IllegalArgumentException("No se encontró el antecedente con el ID:
+        // " + idperson);
+        // }
+
+        return null;
     }
 
     @Override

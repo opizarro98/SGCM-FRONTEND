@@ -2,6 +2,7 @@ package com.ec.sgcm.services;
 
 import java.util.List;
 import com.ec.sgcm.model.Antecedents;
+import com.ec.sgcm.model.Persons;
 
 public interface AntecedentsService {
 
@@ -11,7 +12,7 @@ public interface AntecedentsService {
 
     List<Antecedents> getAllAntecedents();
 
-    Antecedents getAntecedentById(Long id);
+    Antecedents getAntecedentByIdPerson(Long person);
 
     void deleteAntecedent(Long id);
 }

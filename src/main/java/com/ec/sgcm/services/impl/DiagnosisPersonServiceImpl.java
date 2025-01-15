@@ -17,18 +17,8 @@ public class DiagnosisPersonServiceImpl implements DiagnosisPersonService {
     DiagnosisPersonRepo diagnosisPersonRepo;
 
     @Override
-    public DiagnosisPerson createNewDiagnosisPerson(DiagnosisPerson DiagnosisPerson) {
-        Optional<DiagnosisPerson> existingDiagnosisPersons = diagnosisPersonRepo
-                .findById(DiagnosisPerson.getId());
-        if (existingDiagnosisPersons.isPresent()) {
-            DiagnosisPerson existDiagnosisPersonsnew = existingDiagnosisPersons.get();
-            existDiagnosisPersonsnew.setDescription(DiagnosisPerson.getDescription());
-            System.out.println("se guardo correcatmente el diagnostico de la persona "
-                    + existDiagnosisPersonsnew.getDescription());
-            return diagnosisPersonRepo.save(existDiagnosisPersonsnew);
-        } else {
-            throw new IllegalArgumentException("No se encontró el diagnostico con el ID proporcionado.");
-        }
+    public DiagnosisPerson createNewDiagnosisPerson(DiagnosisPerson diagnosisPerson) {
+        return diagnosisPersonRepo.save(diagnosisPerson);
     }
 
     @Override
