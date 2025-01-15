@@ -72,7 +72,7 @@
                             <mat-divider></mat-divider>
                             <mat-divider></mat-divider>
                             <mat-divider></mat-divider>
-                        </mat-option>                        
+                        </mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -81,7 +81,7 @@
                     <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Diagnostico</mat-label>
                     <mat-form-field appearance="outline" class="w-100" color="primary">
                         <mat-select formControlName="diagnosis">
-                            <mat-option *ngFor="let diagnosis of diagnoses" [value]="diagnosis.id">
+                            <mat-option *ngFor="let diagnosis of diagnoses" [value]="diagnosis.name">
                                 {{ diagnosis.code }} / {{ diagnosis.name }}
                                 <mat-divider></mat-divider>
                                 <mat-divider></mat-divider>
