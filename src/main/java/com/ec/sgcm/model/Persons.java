@@ -46,11 +46,6 @@ public class Persons {
     @Column(nullable = false)
     private String occupancy;
 
-    // Relación directa con Diagnóstico Actual
-    @ManyToOne
-    @JoinColumn(name = "current_diagnosis_id")
-    private DiagnosisCIE currentDiagnosis;
-
     // Relación con Citas Médicas
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference // Marca esta relación como la referencia "padre"
