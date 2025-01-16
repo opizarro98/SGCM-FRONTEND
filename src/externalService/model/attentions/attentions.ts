@@ -3,6 +3,6 @@ export interface Attentions {
     currentStatus: string;
     intersessionTask: string;
     history: {
-        id: number;
+        id: number ;
     };
 }

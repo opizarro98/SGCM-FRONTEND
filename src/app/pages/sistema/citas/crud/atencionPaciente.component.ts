@@ -20,6 +20,8 @@ import { CategoryService } from 'src/externalService/service/category/CategorySe
 import { Category } from 'src/externalService/model/category/Category';
 import { MatSelectModule } from '@angular/material/select';
 import { AppointmentService } from 'src/externalService/service/appointment/AppointmentService';
+import { AntecedentsService } from 'src/externalService/service/antecedets/antecedentService';
+import { Antecedent } from 'src/externalService/model/antecedents/Antecedent';
 
 @Component({
   selector: 'atencionPaciente',
@@ -54,6 +56,7 @@ export class AtencionPacienteDialog {
     private dialogRef: MatDialogRef<AtencionPacienteDialog>,
     private snackBar: MatSnackBar,
     private appontmentService: AppointmentService,
+    private antecedentService: AntecedentsService,
     private categoryService: CategoryService,
     @Inject(MAT_DIALOG_DATA) public data: { identification: string, reason:  string, id: string}
   ) {
@@ -63,6 +66,7 @@ export class AtencionPacienteDialog {
       apellido: [{ value: '', disabled: true }],
       fechaNacimiento: [{ value: '', disabled: true }],
       ocupacion: [{ value: '', disabled: true }],
+      antecedentes: ['', Validators.required],
       categoria: ['', Validators.required], // Control para categoría
       diagnosis: ['', Validators.required], // Control para diagnóstico
       motivoConsulta: [this.data.reason,Validators.required], // Campos editables
@@ -78,7 +82,6 @@ export class AtencionPacienteDialog {
     this.categoryService.getCategory().subscribe({
       next: (data) => {
         this.categories = data;
-        console.log('Categorías cargadas:', this.categories);
       },
       error: (err) => {
         console.error('Error al cargar categorías:', err);
@@ -98,7 +101,6 @@ export class AtencionPacienteDialog {
       (category) => category.id === categoryId
     );
     this.diagnoses = selectedCategory ? selectedCategory.diagnoses : [];
-    console.log('Diagnósticos filtrados:', this.diagnoses);
 
     // Resetear el diagnóstico seleccionado si la categoría cambia
     this.personForm.get('diagnosis')?.setValue('');
@@ -123,11 +125,6 @@ export class AtencionPacienteDialog {
   }
 
   onSubmit(): void {
-    console.log('Dagnosis:', this.personForm.get('diagnosis')?.value);
-    console.log('categoria:', this.personForm.get('categoria')?.value);
-    console.log('Motivo Consulta:', this.personForm.get('motivoConsulta')?.value);
-    console.log('Estado Actual:', this.personForm.get('estadoActual')?.value);
-    console.log('Tareas Intersección:', this.personForm.get('tareasInterseccion')?.value);
     if (this.personForm.valid && this.historyId !== null) {
       // Construir el objeto de tipo Attentions
       const attention: Attentions = {
@@ -149,6 +146,29 @@ export class AtencionPacienteDialog {
         }
       });
 
+      this.personService.getPersonByIdentification(this.data.identification).subscribe({
+      next: (person: Person) => {
+        const antecedent: Antecedent = {
+          id: '',
+          description: this.personForm.get('antecedentes')?.value,
+          person: person, // Asignar la persona obtenida del servicio
+        };
+
+        // Guardar los antecedentes
+        this.antecedentService.createAntecents(antecedent, token).subscribe({
+          next: (response) => {
+            this.snackBar.open('Antecedente registrado con éxito', 'Cerrar', { duration: 3000 });
+          },
+          error: (error: HttpErrorResponse) => {
+            this.snackBar.open('Error al registrar el antecedente', 'Cerrar', { duration: 3000 });
+          }
+        });
+      },
+      error: (error: HttpErrorResponse) => {
+        this.snackBar.open('Error al obtener la persona', 'Cerrar', { duration: 3000 });
+      }
+    });
+
       // Llamar al servicio para crear la atención
       this.attentionsService.createAttention(attention, token).subscribe({
         next: (response) => {
@@ -160,6 +180,7 @@ export class AtencionPacienteDialog {
           this.snackBar.open('Error al registrar la atención', 'Cerrar', { duration: 3000 });
         }
       });
+
     } else {
       this.snackBar.open('Complete todos los campos requeridos', 'Cerrar', { duration: 3000 });
     }

@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Registrar Nuevo Paciente</h2>
+<h2 mat-dialog-title>Atencion del paciente</h2>
 <mat-divider></mat-divider>
 <mat-dialog-content class="mat-typography">
     <form [formGroup]="personForm">
@@ -47,6 +47,16 @@
             </div>
         </div>
 
+        <!-- Antecedentes -->
+        <div class="row">
+            <div class="col-12">
+                <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Antecedentes</mat-label>
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <textarea matInput formControlName="antecedentes"></textarea>
+                </mat-form-field>
+            </div>
+        </div>
+
         <!-- Categorias y diagnosticos -->
         <mat-divider></mat-divider>
         <br>
@@ -59,7 +69,10 @@
                     <mat-select formControlName="categoria">
                         <mat-option *ngFor="let category of categories" [value]="category.id">
                             {{ category.code }} / {{ category.name }}
-                        </mat-option>
+                            <mat-divider></mat-divider>
+                            <mat-divider></mat-divider>
+                            <mat-divider></mat-divider>
+                        </mat-option>                        
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -70,6 +83,9 @@
                         <mat-select formControlName="diagnosis">
                             <mat-option *ngFor="let diagnosis of diagnoses" [value]="diagnosis.id">
                                 {{ diagnosis.code }} / {{ diagnosis.name }}
+                                <mat-divider></mat-divider>
+                                <mat-divider></mat-divider>
+                                <mat-divider></mat-divider>
                             </mat-option>
                         </mat-select>
                     </mat-form-field>

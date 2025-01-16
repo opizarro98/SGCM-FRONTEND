@@ -148,7 +148,9 @@ export class AppDashboardComponent {
   loadAppointments(): void {
     this.appointmentsService.getAppointmentsnotAttended().subscribe((data: AppointmentListDTO[]) => {
       const today = new Date().toISOString().split('T')[0];
-      this.appointments = data.filter(appointment => appointment.date === today);
+      this.appointments = data;
+      console.log('DATA ES: ' + this.appointments)
+      console.log(today + 'asdasdadsda LA FECHA ES ')
     });
   }
 
