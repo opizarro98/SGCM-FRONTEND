@@ -3,6 +3,7 @@ package com.ec.sgcm.model;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -47,7 +48,7 @@ public class Persons {
 
     // Relación directa con Diagnóstico Actual
     @ManyToOne
-    @JoinColumn(name = "current_diagnosis_id", nullable = true)
+    @JoinColumn(name = "current_diagnosis_id")
     private DiagnosisCIE currentDiagnosis;
 
     // Relación con Citas Médicas

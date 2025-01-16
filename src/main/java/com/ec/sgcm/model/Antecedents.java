@@ -34,7 +34,6 @@ public class Antecedents {
     // Relación con Person
     @ManyToOne
     @JoinColumn(name = "person_id", nullable = false)
-    @JsonBackReference
     private Persons person;
 
 }
