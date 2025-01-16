@@ -26,6 +26,19 @@ export class DiagnosisPersonService {
         );
     }
 
+    getDiagnosisByPersonId(personId: string, token: string): Observable<DiagnosisPerson[]> {
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.get<DiagnosisPerson[]>(`${this.apiUrl}getDiagnosisPersonByPersonId/${personId}`, { headers }).pipe(
+            tap((response) => {
+            }),
+            catchError(this.handleError)
+        );
+    }
+
+
     private handleError(error: HttpErrorResponse): Observable<never> {
         let errorMessage = 'An unknown error occurred!';
 

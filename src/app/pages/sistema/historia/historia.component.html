@@ -9,31 +9,34 @@
         <div class="row">
             <div class="col-lg-12">
                 <mat-card class="b-1 shadow-none">
-                <mat-card-header class="d-flex flex-column align-items-start">
-                    <!-- Input de cédula -->
-                    <div class="row w-100">
-                        <mat-form-field appearance="outline" class="example-full-width col-sm-8">
-                            <mat-label>Buscar paciente</mat-label>
-                            <input matInput placeholder="Ingrese la cédula del paciente" [(ngModel)]="identification">
-                        </mat-form-field>
-                        <button mat-stroked-button color="primary" class="col-md-3 buscar-btn" (click)="buscarPaciente()">
-                            <i-tabler class="routeIcon" name="Search" matListItemIcon></i-tabler>
-                            Buscar
-                        </button>
-                    </div>
-                
-                    <!-- Información del paciente alineada debajo del input -->
-                    <div *ngIf="paciente" class="row w-100 mt-2">
-                        <div class="col-sm-8">
-                            <p><strong>Nombre:</strong> {{ paciente.firstName }} {{ paciente.lastName }}</p>
-                            <p><strong>Fecha de Nacimiento:</strong> {{ paciente.birthDate | date: 'dd/MM/yyyy' }}</p>
+                    <mat-card-header class="d-flex flex-column align-items-start">
+                        <!-- Input de cédula -->
+                        <div class="row w-100">
+                            <mat-form-field appearance="outline" class="example-full-width col-sm-8">
+                                <mat-label>Buscar paciente</mat-label>
+                                <input matInput placeholder="Ingrese la cédula del paciente"
+                                    [(ngModel)]="identification">
+                            </mat-form-field>
+                            <button mat-stroked-button color="primary" class="col-md-3 buscar-btn"
+                                (click)="buscarPaciente()">
+                                <i-tabler class="routeIcon" name="Search" matListItemIcon></i-tabler>
+                                Buscar
+                            </button>
                         </div>
-                        <div class="col-md-6">
-                            <p><strong>Edad:</strong> {{ calcularEdad(paciente.birthDate) }} años</p>
-                            <p><strong>Ocupación:</strong> {{ paciente.occupancy }}</p>
+
+                        <!-- Información del paciente alineada debajo del input -->
+                        <div *ngIf="paciente" class="row w-100 mt-2">
+                            <div class="col-sm-8">
+                                <p><strong>Nombre:</strong> {{ paciente.firstName }} {{ paciente.lastName }}</p>
+                                <p><strong>Fecha de Nacimiento:</strong> {{ paciente.birthDate | date: 'dd/MM/yyyy' }}
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Edad:</strong> {{ calcularEdad(paciente.birthDate) }} años</p>
+                                <p><strong>Ocupación:</strong> {{ paciente.occupancy }}</p>
+                            </div>
                         </div>
-                    </div>
-                </mat-card-header>
+                    </mat-card-header>
 
                 </mat-card>
                 <mat-card-content class="b-t-1 mt-3" *ngFor="let attention of attentions">
@@ -41,7 +44,7 @@
                         <!-- Columna izquierda con el acordeón de citas -->
                         <div class="col-md-6">
                             <mat-accordion class="example-headers-align" multi>
-                                <mat-expansion-panel >
+                                <mat-expansion-panel>
                                     <mat-expansion-panel-header>
                                         <mat-panel-title>
                                             <h4>Fecha de Atención:</h4>
@@ -59,7 +62,7 @@
                                         <h4>Estado actual:</h4>
                                         <p>{{ attention.currentStatus }}</p>
                                     </div>
-                    
+
                                     <!-- Contenido del panel de expansión -->
                                     <div>
                                         <h4>Tarea de Intercesión:</h4>
@@ -71,14 +74,20 @@
 
                         <!-- Columna derecha con antecedentes y diagnóstico -->
                         <div class="col-md-6">
+                            <!-- Antecedentes -->
                             <mat-form-field appearance="outline" class="w-100 mb-3">
                                 <mat-label>Antecedentes</mat-label>
-                                <textarea matInput rows="5" placeholder="Antecedentes Actual"></textarea>
+                                <textarea matInput rows="5" placeholder="Antecedentes actuales" [readonly]="true">
+                              {{ antecedentes || 'No se encontraron antecedentes.' }}
+                            </textarea>
                             </mat-form-field>
 
+                            <!-- Diagnóstico -->
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Diagnóstico</mat-label>
-                                <textarea matInput rows="5" [readonly]="true" placeholder="Diagnóstico Actual">{{ paciente.history?.currentDiagnosis || 'Sin diagnóstico registrado' }}</textarea> 
+                                <textarea matInput rows="5" placeholder="Diagnóstico actual" [readonly]="true">
+                              {{ diagnosis || 'No se encontraron diagnósticos.' }}
+                            </textarea>
                             </mat-form-field>
                         </div>
                     </div>
