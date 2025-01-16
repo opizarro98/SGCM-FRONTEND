@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 
 import com.ec.sgcm.model.Histories;
+import com.ec.sgcm.model.dto.HistoryPerson;
 import com.ec.sgcm.services.HistorieService;
 
 @RestController
@@ -43,6 +44,13 @@ public class HistorieController {
     @GetMapping("/{id}")
     public ResponseEntity<Histories> getHistoryById(@PathVariable Long id) {
         Histories history = historieService.getHistoryById(id);
+        return ResponseEntity.ok(history);
+    }
+
+    // Obtener una historia clínica de un paciente por su ID history
+    @GetMapping("/personHistory/{id}")
+    public ResponseEntity<HistoryPerson> getPersonHistoryById(@PathVariable Long id) {
+        HistoryPerson history = historieService.getPersonHistoryById(id);
         return ResponseEntity.ok(history);
     }
 }

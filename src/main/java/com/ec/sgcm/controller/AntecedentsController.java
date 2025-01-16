@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ec.sgcm.model.Antecedents;
-import com.ec.sgcm.model.Persons;
 import com.ec.sgcm.services.AntecedentsService;
 
 import java.util.List;
@@ -45,10 +44,10 @@ public class AntecedentsController {
         return ResponseEntity.ok().body(antecedentsService.getAllAntecedents());
     }
 
-    @GetMapping("/getAntecedentByIdPerson/{idperson}")
+    @GetMapping("/getAntecedentsByPersonId/{idperson}")
     @ResponseBody
-    public ResponseEntity<Antecedents> getAntecedentById(@PathVariable Long idperson) {
-        return ResponseEntity.ok().body(antecedentsService.getAntecedentByIdPerson(idperson));
+    public ResponseEntity<Antecedents> getAntecedentsByPersonId(@PathVariable Long idperson) {
+        return ResponseEntity.ok().body(antecedentsService.getAntecedentsByPersonId(idperson));
     }
 
     @DeleteMapping("/deleteAntecedent/{id}")

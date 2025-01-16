@@ -12,7 +12,7 @@ public interface DiagnosisPersonService {
 
     List<DiagnosisPerson> getAllDiagnosisPerson();
 
-    DiagnosisPerson getDiagnosisPersonById(Long id);
+    DiagnosisPerson getDiagnosisPersonByPersonId(Long idPerson);
 
     void deleteDiagnosisPerson(Long id);
 }

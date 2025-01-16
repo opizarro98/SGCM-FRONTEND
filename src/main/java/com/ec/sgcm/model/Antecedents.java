@@ -2,8 +2,6 @@ package com.ec.sgcm.model;
 
 import org.hibernate.annotations.Comment;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,5 +33,10 @@ public class Antecedents {
     @ManyToOne
     @JoinColumn(name = "person_id", nullable = false)
     private Persons person;
+
+    public Antecedents orElseThrow(Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
+    }
 
 }

@@ -44,10 +44,10 @@ public class DiagnosisPersonController {
         return ResponseEntity.ok().body(DiagnosisPersonService.getAllDiagnosisPerson());
     }
 
-    @GetMapping("/getDiagnosisById/{id}")
+    @GetMapping("/getDiagnosisPersonByPersonId/{idperson}")
     @ResponseBody
-    public ResponseEntity<DiagnosisPerson> getDiagnosisById(@PathVariable Long id) {
-        return ResponseEntity.ok().body(DiagnosisPersonService.getDiagnosisPersonById(id));
+    public ResponseEntity<DiagnosisPerson> getDiagnosisPersonByPersonId(@PathVariable Long idperson) {
+        return ResponseEntity.ok().body(DiagnosisPersonService.getDiagnosisPersonByPersonId(idperson));
     }
 
     @DeleteMapping("/deleteDiagnosis/{id}")

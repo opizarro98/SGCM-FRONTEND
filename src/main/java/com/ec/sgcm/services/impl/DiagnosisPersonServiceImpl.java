@@ -1,13 +1,14 @@
 package com.ec.sgcm.services.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ec.sgcm.model.DiagnosisPerson;
+import com.ec.sgcm.model.Persons;
 import com.ec.sgcm.repository.DiagnosisPersonRepo;
+import com.ec.sgcm.repository.PersonRepo;
 import com.ec.sgcm.services.DiagnosisPersonService;
 
 @Service
@@ -15,6 +16,9 @@ public class DiagnosisPersonServiceImpl implements DiagnosisPersonService {
 
     @Autowired
     DiagnosisPersonRepo diagnosisPersonRepo;
+
+    @Autowired
+    private PersonRepo personRepo;
 
     @Override
     public DiagnosisPerson createNewDiagnosisPerson(DiagnosisPerson diagnosisPerson) {
@@ -34,9 +38,11 @@ public class DiagnosisPersonServiceImpl implements DiagnosisPersonService {
     }
 
     @Override
-    public DiagnosisPerson getDiagnosisPersonById(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getDiagnosisPersonById'");
+    public DiagnosisPerson getDiagnosisPersonByPersonId(Long idPerson) {
+        Persons person = personRepo.findById(
+                idPerson)
+                .orElseThrow(() -> new IllegalArgumentException("No se encontró la persona con el ID: " + idPerson));
+        return diagnosisPersonRepo.findByIdPerson(person);
     }
 
     @Override
