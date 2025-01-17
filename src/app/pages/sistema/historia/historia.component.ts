@@ -59,23 +59,33 @@ export class HistoriaComponent {
 
         // Obtener antecedentes
         this.antecedentsService.getAntecedentsByPersonId(person.id, token).subscribe({
-          next: (antecedents) => {
-            console.log(antecedents);
-            this.antecedentes = antecedents.map((ant) => ant.description).join('\n');
+          next: (response) => {
+            if (Array.isArray(response) && response.length > 0) {
+              this.antecedentes = response[0].description; // Usar el primer elemento del arreglo
+            } else if (response && response.description) {
+              this.antecedentes = response.description; // Si es un único objeto
+            } else {
+              this.antecedentes = 'No se encontraron antecedentes.';
+            }
           },
-          error: () => {
-            console.error('Error al obtener antecedentes');
+          error: (error) => {
+            console.error('Error al obtener antecedentes:', error);
             this.antecedentes = 'No se encontraron antecedentes.';
           }
         });
 
-        // Obtener diagnósticos
         this.diagnosisService.getDiagnosisByPersonId(person.id, token).subscribe({
-          next: (diagnosis) => {
-            this.diagnosis = diagnosis.map((diag) => diag.description).join('\n');
+          next: (diagnosisResponse) => {
+            if (Array.isArray(diagnosisResponse) && diagnosisResponse.length > 0) {
+              this.diagnosis = diagnosisResponse[0].description;
+            } else if (diagnosisResponse && diagnosisResponse.description) {
+              this.diagnosis = diagnosisResponse.description;
+            } else {
+              this.diagnosis = 'No se encontraron diagnósticos.';
+            }
           },
-          error: () => {
-            console.error('Error al obtener diagnósticos');
+          error: (error) => {
+            console.error('Error al obtener diagnósticos:', error);
             this.diagnosis = 'No se encontraron diagnósticos.';
           }
         });

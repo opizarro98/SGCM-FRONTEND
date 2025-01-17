@@ -25,18 +25,19 @@ export class AntecedentsService {
     );
   }
 
-  getAntecedentsByPersonId(personId: string, token: string): Observable<Antecedent[]> {
+  getAntecedentsByPersonId(personId: string, token: string): Observable<Antecedent> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.get<Antecedent[]>(`${this.apiUrl}getAntecedentsByPersonId/${personId}`, { headers }).pipe(
+    return this.http.get<Antecedent>(`${this.apiUrl}getAntecedentsByPersonId/${personId}`, { headers }).pipe(
       tap((response) => {
-        console.log('el id de la persona a consultar es: ' + response);
+        console.log('Respuesta del servicio de antecedentes:', response);
       }),
       catchError(this.handleError)
     );
   }
+
 
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An unknown error occurred!';
