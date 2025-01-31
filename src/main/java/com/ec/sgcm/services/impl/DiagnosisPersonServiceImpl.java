@@ -1,7 +1,13 @@
 package com.ec.sgcm.services.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.ec.sgcm.model.CategoriesCIE;
+import com.ec.sgcm.model.dto.DiagnosisPersonsIDDTO;
+import com.ec.sgcm.repository.CategorieCIERepo;
+import com.ec.sgcm.services.mappers.AppointmentMapper;
+import com.ec.sgcm.services.mappers.DiagnosisMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +24,9 @@ public class DiagnosisPersonServiceImpl implements DiagnosisPersonService {
     DiagnosisPersonRepo diagnosisPersonRepo;
 
     @Autowired
+    CategorieCIERepo categorieCIERepo;
+
+    @Autowired
     private PersonRepo personRepo;
 
     @Override
@@ -26,9 +35,10 @@ public class DiagnosisPersonServiceImpl implements DiagnosisPersonService {
     }
 
     @Override
-    public DiagnosisPerson updateDiagnosisPerson(DiagnosisPerson DiagnosisPerson) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateDiagnosisPerson'");
+    public DiagnosisPerson updateDiagnosisPerson(DiagnosisPerson diagnosisPerson) {
+        DiagnosisPerson finDiagnosis =  diagnosisPersonRepo.findByIdPerson(diagnosisPerson.getPerson());
+        finDiagnosis.setDiagnosisCIE(diagnosisPerson.getDiagnosisCIE());
+        return diagnosisPersonRepo.save(finDiagnosis);
     }
 
     @Override
@@ -42,7 +52,21 @@ public class DiagnosisPersonServiceImpl implements DiagnosisPersonService {
         Persons person = personRepo.findById(
                 idPerson)
                 .orElseThrow(() -> new IllegalArgumentException("No se encontró la persona con el ID: " + idPerson));
-        return diagnosisPersonRepo.findByIdPerson(person);
+        DiagnosisPerson updateDiagnosis = diagnosisPersonRepo.findByIdPerson(person);
+        return updateDiagnosis;
+    }
+
+    @Override
+    public DiagnosisPersonsIDDTO getDiagnosisPersonByPersonIdwithCategory(Long idPerson) {
+        Persons person = personRepo.findById(
+                        idPerson)
+                .orElseThrow(() -> new IllegalArgumentException("No se encontró la persona con el ID: " + idPerson));
+        DiagnosisPerson updateDiagnosis = diagnosisPersonRepo.findByIdPerson(person);
+        CategoriesCIE updateCategory = categorieCIERepo.findByID(updateDiagnosis.getDiagnosisCIE().getCategory().getId());
+        //return updateDiagnosis.stream()
+               // .map(AppointmentMapper::toDTO)
+               // .collect(Collectors.toList());
+        return null;
     }
 
     @Override

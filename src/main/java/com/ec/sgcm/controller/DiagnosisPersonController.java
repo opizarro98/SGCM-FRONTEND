@@ -28,14 +28,14 @@ public class DiagnosisPersonController {
 
     @PostMapping("/createNewDiagnosis")
     @ResponseBody
-    public ResponseEntity<DiagnosisPerson> createNewDiagnosis(@RequestBody DiagnosisPerson Diagnosis) {
-        return ResponseEntity.ok().body(DiagnosisPersonService.createNewDiagnosisPerson(Diagnosis));
+    public ResponseEntity<DiagnosisPerson> createNewDiagnosis(@RequestBody DiagnosisPerson diagnosis) {
+        return ResponseEntity.ok().body(DiagnosisPersonService.createNewDiagnosisPerson(diagnosis));
     }
 
     @PutMapping("/updateDiagnosis")
     @ResponseBody
-    public ResponseEntity<DiagnosisPerson> updateDiagnosis(@RequestBody DiagnosisPerson Diagnosis) {
-        return ResponseEntity.ok().body(DiagnosisPersonService.updateDiagnosisPerson(Diagnosis));
+    public ResponseEntity<DiagnosisPerson> updateDiagnosis(@RequestBody DiagnosisPerson diagnosis) {
+        return ResponseEntity.ok().body(DiagnosisPersonService.updateDiagnosisPerson(diagnosis));
     }
 
     @GetMapping("/getAllDiagnosis")
@@ -47,6 +47,12 @@ public class DiagnosisPersonController {
     @GetMapping("/getDiagnosisPersonByPersonId/{idperson}")
     @ResponseBody
     public ResponseEntity<DiagnosisPerson> getDiagnosisPersonByPersonId(@PathVariable Long idperson) {
+        return ResponseEntity.ok().body(DiagnosisPersonService.getDiagnosisPersonByPersonId(idperson));
+    }
+
+    @GetMapping("/getDiagnosisPersonByPersonIdwithCategory/{idperson}")
+    @ResponseBody
+    public ResponseEntity<DiagnosisPerson> getDiagnosisPersonByPersonIdwithCategory(@PathVariable Long idperson) {
         return ResponseEntity.ok().body(DiagnosisPersonService.getDiagnosisPersonByPersonId(idperson));
     }
 

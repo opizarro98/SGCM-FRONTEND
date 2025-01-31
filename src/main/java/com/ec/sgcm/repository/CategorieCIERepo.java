@@ -14,6 +14,7 @@ public interface CategorieCIERepo extends JpaRepository<CategoriesCIE, Long> {
     @Query("FROM CategoriesCIE WHERE code = :code")
     CategoriesCIE findByCode1(String code);
 
+    CategoriesCIE findByID(Long idCategory);
     Optional<CategoriesCIE> findByCode(String code);
 
 }

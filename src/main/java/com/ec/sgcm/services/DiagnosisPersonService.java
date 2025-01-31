@@ -3,6 +3,7 @@ package com.ec.sgcm.services;
 import java.util.List;
 
 import com.ec.sgcm.model.DiagnosisPerson;
+import com.ec.sgcm.model.dto.DiagnosisPersonsIDDTO;
 
 public interface DiagnosisPersonService {
 
@@ -13,6 +14,8 @@ public interface DiagnosisPersonService {
     List<DiagnosisPerson> getAllDiagnosisPerson();
 
     DiagnosisPerson getDiagnosisPersonByPersonId(Long idPerson);
+
+    DiagnosisPersonsIDDTO getDiagnosisPersonByPersonIdwithCategory(Long idPerson);
 
     void deleteDiagnosisPerson(Long id);
 }
