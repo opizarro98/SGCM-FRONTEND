@@ -24,9 +24,8 @@ public class DiagnosisPerson {
     @Comment("Id del diagnostico de la persona, es un campo autoincrementable")
     private Long id;
 
-    @Column(nullable = false)
-    @Comment("descripcion del diagnostico")
-    private String description;
+    @ManyToOne
+    private DiagnosisCIE diagnosisCIE;
 
     // Relación con Person
     @ManyToOne

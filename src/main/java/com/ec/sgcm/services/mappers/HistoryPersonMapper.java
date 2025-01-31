@@ -10,7 +10,7 @@ public class HistoryPersonMapper {
             DiagnosisPerson diagnosisPerson) {
         HistoryPerson historyPerson = new HistoryPerson();
         historyPerson.setHistory(histories);
-        historyPerson.setDiagnostic(diagnosisPerson.getDescription());
+        historyPerson.setDiagnostic(diagnosisPerson.getDiagnosisCIE().getDescription());
         historyPerson.setAntecedents(antecedents.getDescription());
         return historyPerson;
     }
