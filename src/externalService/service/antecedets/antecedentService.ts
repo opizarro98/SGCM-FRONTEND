@@ -25,6 +25,19 @@ export class AntecedentsService {
     );
   }
 
+  updateAntecedent(antecedente: Antecedent, token: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.put<any>(`${this.apiUrl}updateAntecedent`, antecedente, { headers }).pipe(
+      tap((response) => {
+
+      }),
+      catchError(this.handleError)
+    );
+  }
+
   getAntecedentsByPersonId(personId: string, token: string): Observable<Antecedent> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`

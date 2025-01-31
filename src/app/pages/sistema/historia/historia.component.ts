@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Diagnosis } from 'src/externalService/model/diagnosis/Diagnosis';
 import { AntecedentsService } from 'src/externalService/service/antecedets/antecedentService';
 import { DiagnosisService } from 'src/externalService/service/diagnosis/DiagnosisService';
 import { DiagnosisPersonService } from 'src/externalService/service/diagnosisPerson/DiagnosisPersonService';
@@ -74,19 +75,20 @@ export class HistoriaComponent {
           }
         });
 
+
+        //obtener diagnostico
         this.diagnosisService.getDiagnosisByPersonId(person.id, token).subscribe({
           next: (diagnosisResponse) => {
-            if (Array.isArray(diagnosisResponse) && diagnosisResponse.length > 0) {
-              this.diagnosis = diagnosisResponse[0].description;
-            } else if (diagnosisResponse && diagnosisResponse.description) {
-              this.diagnosis = diagnosisResponse.description;
+            if (diagnosisResponse && diagnosisResponse) {
+              this.diagnosis = diagnosisResponse.diagnosisCIE.code + " - " + diagnosisResponse.diagnosisCIE.name;
+              console.log('Respuesta del servicio de antecedentes:', diagnosisResponse.diagnosisCIE);
             } else {
-              this.diagnosis = 'No se encontraron diagnósticos.';
+              this.diagnosis = "No se encontraron diagnósticos.";
             }
           },
           error: (error) => {
             console.error('Error al obtener diagnósticos:', error);
-            this.diagnosis = 'No se encontraron diagnósticos.';
+            this.diagnosis = "No se encontraron diagnósticos.";
           }
         });
 

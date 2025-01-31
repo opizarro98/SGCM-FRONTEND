@@ -26,6 +26,20 @@ export class DiagnosisPersonService {
         );
     }
 
+    updateDiagnosis(cita: DiagnosisPerson, token: string): Observable<any> {
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.put<any>(`${this.apiUrl}updateDiagnosis`, cita, { headers }).pipe(
+            tap((response) => {
+                console.log('se creo con exito el diagnostico de la persona ' + response)
+            }),
+            catchError(this.handleError)
+
+        );
+    }
+
     getDiagnosisByPersonId(personId: string, token: string): Observable<DiagnosisPerson> {
         const headers = new HttpHeaders({
             'Authorization': `Bearer ${token}`

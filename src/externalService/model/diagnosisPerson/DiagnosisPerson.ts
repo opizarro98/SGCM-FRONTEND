@@ -1,5 +1,6 @@
+import { Diagnosis } from '../diagnosis/Diagnosis';
 import { Person } from '../person/Person';
 export interface DiagnosisPerson {
-    description: string;
+    diagnosisCIE: Diagnosis;
     person: Person;
 }
