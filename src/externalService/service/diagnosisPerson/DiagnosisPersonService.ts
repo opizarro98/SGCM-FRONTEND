@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { environment } from 'src/enviroments/environment';
 import { DiagnosisPerson } from 'src/externalService/model/diagnosisPerson/DiagnosisPerson';
+import {DiagnosisPersonsIDDTO} from '../../model/diagnosisPerson/DiagnosisPersonsIDDTO';
 
 @Injectable({
     providedIn: 'root'
@@ -26,7 +27,7 @@ export class DiagnosisPersonService {
         );
     }
 
-    updateDiagnosis(cita: DiagnosisPerson, token: string): Observable<any> {
+    updateDiagnosis(cita: DiagnosisPersonsIDDTO, token: string): Observable<any> {
         const headers = new HttpHeaders({
             'Authorization': `Bearer ${token}`
         });
@@ -46,6 +47,18 @@ export class DiagnosisPersonService {
         });
 
         return this.http.get<DiagnosisPerson>(`${this.apiUrl}getDiagnosisPersonByPersonId/${personId}`, { headers }).pipe(
+            tap((response) => {
+                console.log('Respuesta del servicio de antecedentes:', response);
+            }),
+            catchError(this.handleError)
+        );
+    }
+
+    getDiagnosisByPersonIdComplete(personId: string, token: string): Observable<DiagnosisPersonsIDDTO> {
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`
+        });
+        return this.http.get<DiagnosisPersonsIDDTO>(`${this.apiUrl}getDiagnosisPersonByPersonId/${personId}`, { headers }).pipe(
             tap((response) => {
                 console.log('Respuesta del servicio de antecedentes:', response);
             }),

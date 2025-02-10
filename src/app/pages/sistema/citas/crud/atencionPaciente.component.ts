@@ -24,6 +24,9 @@ import { AntecedentsService } from 'src/externalService/service/antecedets/antec
 import { Antecedent } from 'src/externalService/model/antecedents/Antecedent';
 import { DiagnosisPersonService } from 'src/externalService/service/diagnosisPerson/DiagnosisPersonService';
 import { DiagnosisPerson } from 'src/externalService/model/diagnosisPerson/DiagnosisPerson';
+import {DiagnosisPersonsIDDTO} from '../../../../../externalService/model/diagnosisPerson/DiagnosisPersonsIDDTO';
+import { DiagnosisService } from 'src/externalService/service/diagnosis/DiagnosisService';
+import { map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'atencionPaciente',
@@ -53,7 +56,7 @@ export class AtencionPacienteDialog {
   diagnosis: string = ''; // Diagnóstico actual
   antecedentes: string = ''; // Antecedentes actuales
   updateAntecedent: Antecedent | null = null;
-  updateDiagnosis: DiagnosisPerson | null = null;
+  updateDiagnosis: DiagnosisPersonsIDDTO | null = null;
   token: string | null = null;
   tieneantecedentes: boolean = false;
   tieneDiagnostico: boolean = false;
@@ -68,7 +71,7 @@ export class AtencionPacienteDialog {
     private antecedentService: AntecedentsService,
     private diagnosisPersonService: DiagnosisPersonService,
     private categoryService: CategoryService,
-    private diagnosisService: DiagnosisPersonService,
+    private diagnosisService: DiagnosisService,
     private antecedentsService: AntecedentsService,
     @Inject(MAT_DIALOG_DATA) public data: { identification: string, reason: string, id: string }
   ) {
@@ -119,10 +122,17 @@ export class AtencionPacienteDialog {
     this.personForm.get('diagnosis')?.setValue('');
   }
 
+
+  /* ************************************************************
+  // *                                                          *
+  // *                    BUSCAR PACIENTE                       *
+  // *                                                          *
+  // ************************************************************/
   buscarPersona() {
     const token = this.token || '';
     this.personService.getPersonByIdentification(this.data.identification).subscribe({
       next: (person: any) => {
+        // Setear información básica de la persona
         this.personForm.patchValue({
           cedula: person.identification,
           nombre: person.firstName,
@@ -134,32 +144,49 @@ export class AtencionPacienteDialog {
         // Obtener antecedentes
         this.antecedentsService.getAntecedentsByPersonId(person.id, token).subscribe({
           next: (response) => {
-            this.tieneantecedentes = true;
-            this.personForm.patchValue({
-              antecedentes: response.description
-            });
+            if (response && response.description?.trim() !== '') {
+              this.tieneantecedentes = true;
+              this.personForm.patchValue({ antecedentes: response.description });
+            } else {
+              this.tieneantecedentes = false;
+              this.personForm.patchValue({ antecedentes: '' });
+            }
           },
           error: (error) => {
-            console.error('Error al obtener antecedentes:', error);
-            this.antecedentes = '';
+            console.error('No se encontraron antecedentes de la persona:', error);
+            this.tieneantecedentes = false;
+            this.personForm.patchValue({ antecedentes: '' });
           }
         });
 
         // Obtener diagnósticos
-        this.diagnosisService.getDiagnosisByPersonId(person.id, token).subscribe({
+        this.diagnosisPersonService.getDiagnosisByPersonIdComplete(person.id, token).subscribe({
           next: (diagnosisResponse) => {
-            //this.onCategoryChange(diagnosisResponse)
-            this.tieneDiagnostico = true;
-            console.log('Respuesta del servicio del diagnostico:', diagnosisResponse.diagnosisCIE);
-            console.log('Tiene diagnostico= ' + this.tieneDiagnostico);
-            console.log('La categoria que recupera es : ' + diagnosisResponse.diagnosisCIE.category);
-            this.onCategoryChange(parseInt(diagnosisResponse.diagnosisCIE.category.id));
+            if (diagnosisResponse && diagnosisResponse.diagnosisPerson?.id) {
+              const diagnosisCIE = diagnosisResponse.diagnosisPerson.diagnosisCIE;
+              const categoryId = parseInt(diagnosisResponse.idCategory, 10);
 
-            this.personForm.get('diagnosis')?.setValue(diagnosisResponse);
+              this.tieneDiagnostico = true;
+
+              // Primero seleccionamos la categoría
+              this.personForm.get('categoria')?.setValue(categoryId);
+
+              // Luego esperamos a que los diagnósticos de la categoría se carguen antes de setear el diagnóstico
+              this.onCategoryChange(categoryId);
+
+              // Usamos un pequeño retraso para asegurar que los diagnósticos estén cargados antes de setear
+              setTimeout(() => {
+                this.personForm.get('diagnosis')?.setValue(diagnosisCIE.id);
+              }, 300);  // Ajusta el tiempo si es necesario según la velocidad de carga
+            } else {
+              this.tieneDiagnostico = false;
+              this.personForm.get('diagnosis')?.setValue('');
+            }
           },
           error: (error) => {
-            console.error('Error al obtener diagnósticos:', error);
-            this.diagnosis = '';
+            console.error('No se encontraron diagnósticos de la persona:', error);
+            this.tieneDiagnostico = false;
+            this.personForm.get('diagnosis')?.setValue('');
           }
         });
 
@@ -171,126 +198,117 @@ export class AtencionPacienteDialog {
     });
   }
 
+
+
   onSubmit(): void {
-    if (this.personForm.valid && this.historyId !== null) {
-      // Construir el objeto de tipo Attentions
-      const attention: Attentions = {
-        reason: this.personForm.get('motivoConsulta')?.value,
-        currentStatus: this.personForm.get('estadoActual')?.value,
-        intersessionTask: this.personForm.get('tareasInterseccion')?.value,
-        history: { id: this.historyId }
+    if (this.personForm.invalid || this.historyId === null) {
+      this.showSnackbar('Complete todos los campos requeridos');
+      return;
+    }
+
+    const token = localStorage.getItem('token') || '';
+
+    const attention: Attentions = {
+      reason: this.personForm.get('motivoConsulta')?.value,
+      currentStatus: this.personForm.get('estadoActual')?.value,
+      intersessionTask: this.personForm.get('tareasInterseccion')?.value,
+      history: { id: this.historyId }
+    };
+
+    // Marcar la cita como atendida
+    this.appontmentService.attendedAppointment(this.data.id, token).subscribe({
+      next: () => this.handlePersonData(token),
+      error: () => this.showSnackbar('Error al registrar la atención')
+    });
+
+    // Crear la atención
+    this.attentionsService.createAttention(attention, token).subscribe({
+      next: () => {
+        this.showSnackbar('Atención registrada correctamente');
+        this.dialogRef.close(true);
+      },
+      error: () => this.showSnackbar('Error al registrar la atención')
+    });
+  }
+
+  private handlePersonData(token: string): void {
+    this.personService.getPersonByIdentification(this.data.identification).subscribe({
+      next: (person: Person) => {
+        this.processAntecedents(person, token);
+        this.processDiagnosis(person, token);
+      },
+      error: () => this.showSnackbar('Error al obtener la persona')
+    });
+  }
+
+  private processAntecedents(person: Person, token: string): void {
+    if (!this.tieneantecedentes) {
+      const antecedent: Antecedent = {
+        id: '',
+        description: this.personForm.get('antecedentes')?.value,
+        person: person
       };
-
-      // Obtener el token desde el almacenamiento local o un servicio
-      const token = localStorage.getItem('token') || '';
-
-      this.appontmentService.attendedAppointment(this.data.id, token).subscribe({
-        next: (response) => {
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al registrar la atencion', error);
-          this.snackBar.open('Error al registrar la atención', 'Cerrar', { duration: 3000 });
-        }
+      this.antecedentService.createAntecents(antecedent, token).subscribe({
+        next: () => this.showSnackbar('Antecedente registrado con éxito'),
+        error: () => this.showSnackbar('Error al registrar el antecedente')
       });
-
-      this.personService.getPersonByIdentification(this.data.identification).subscribe({
-        next: (person: Person) => {
-
-          //Verifica si no tiene antecedentes anteriores
-          if (!this.tieneantecedentes) {
-            console.log('No tiene antecedentes= ' + this.tieneantecedentes);
-            const antecedent: Antecedent = {
-              id: '',
-              description: this.personForm.get('antecedentes')?.value,
-              person: person, // Asignar la persona obtenida del servicio
-            };
-            // Guardar los antecedentes
-            this.antecedentService.createAntecents(antecedent, token).subscribe({
-              next: (response) => {
-                this.snackBar.open('Antecedente registrado con éxito', 'Cerrar', { duration: 3000 });
-              },
-              error: (error: HttpErrorResponse) => {
-                this.snackBar.open('Error al registrar el antecedente', 'Cerrar', { duration: 3000 });
-              }
-            });
-          } else {
-            //Actualizar los antecedentes
-            this.antecedentsService.getAntecedentsByPersonId(person.id, token).subscribe({
-              next: (response) => {
-                this.updateAntecedent = response;
-                this.antecedentService.updateAntecedent(this.updateAntecedent, token).subscribe({
-                  next: (response) => {
-                    this.snackBar.open('Antecedente actualizado con éxito', 'Cerrar', { duration: 3000 });
-                  },
-                  error: (error: HttpErrorResponse) => {
-                    this.snackBar.open('Error al actualizar el antecedente', 'Cerrar', { duration: 3000 });
-                  }
-                });
-              },
-              error: (error) => {
-                console.error('Error al obtener antecedentes:', error);
-                this.antecedentes = '';
-              }
-            });
-
-          }
-
-          // Verifica si no tiene diagnóstico anterior
-          if (!this.tieneDiagnostico) {
-            console.log('No tiene diagnóstico= ' + this.tieneDiagnostico);
-            const diagnosisperson: DiagnosisPerson = {
-              diagnosisCIE: this.personForm.get('diagnosis')?.value,
-              person: person, // Asignar la persona obtenida del servicio
-            };
-            // guardar el diagnostico de la persona
-            this.diagnosisPersonService.createDiagnosisPerson(diagnosisperson, token).subscribe({
-              next: (response) => {
-                this.snackBar.open('diagnostico registrado con éxito', 'Cerrar', { duration: 3000 });
-              },
-              error: (error: HttpErrorResponse) => {
-                this.snackBar.open('Error al registrar el diagnostico', 'Cerrar', { duration: 3000 });
-              }
-            });
-          } else {
-            //Actualizar el diagnostico
-            this.diagnosisService.getDiagnosisByPersonId(person.id, token).subscribe({
-              next: (response) => {
-                this.updateDiagnosis = response;
-                this.diagnosisService.updateDiagnosis(this.updateDiagnosis, token).subscribe({
-                  next: (response) => {
-                    this.snackBar.open('Diagnostico actualizado con éxito', 'Cerrar', { duration: 3000 });
-                  },
-                  error: (error: HttpErrorResponse) => {
-                    this.snackBar.open('Error al actualizar el diagnostico', 'Cerrar', { duration: 3000 });
-                  }
-                });
-              },
-              error: (error) => {
-                console.error('Error al obtener diagnósticos:', error);
-                this.diagnosis = '';
-              }
-            });
-          }
-        },
-        error: (error: HttpErrorResponse) => {
-          this.snackBar.open('Error al obtener la persona', 'Cerrar', { duration: 3000 });
-        }
-      });
-
-      // Llamar al servicio para crear la atención
-      this.attentionsService.createAttention(attention, token).subscribe({
-        next: (response) => {
-          this.snackBar.open('Atención registrada correctamente', 'Cerrar', { duration: 3000 });
-          this.dialogRef.close(true);
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al registrar la atención:', error);
-          this.snackBar.open('Error al registrar la atención', 'Cerrar', { duration: 3000 });
-        }
-      });
-
     } else {
-      this.snackBar.open('Complete todos los campos requeridos', 'Cerrar', { duration: 3000 });
+      this.antecedentsService.getAntecedentsByPersonId(person.id, token).subscribe({
+        next: (antecedent) => {
+          antecedent.description = this.personForm.get('antecedentes')?.value;
+          this.antecedentService.updateAntecedent(antecedent, token).subscribe({
+            next: () => this.showSnackbar('Antecedente actualizado con éxito'),
+            error: () => this.showSnackbar('Error al actualizar el antecedente')
+          });
+        },
+        error: () => this.showSnackbar('Error al obtener antecedentes')
+      });
     }
   }
+
+  private processDiagnosis(person: Person, token: string): void {
+    if (!this.tieneDiagnostico) {
+      const diagnosisperson: DiagnosisPerson = {
+        diagnosisCIE: this.personForm.get('diagnosis')?.value,
+        person: person
+      };
+      this.diagnosisPersonService.createDiagnosisPerson(diagnosisperson, token).subscribe({
+        next: () => this.showSnackbar('Diagnóstico registrado con éxito'),
+        error: () => this.showSnackbar('Error al registrar el diagnóstico')
+      });
+    } else {
+        this.diagnosisPersonService.getDiagnosisByPersonIdComplete(person.id, token).pipe(
+          switchMap((diagnosis) => {
+            const diagnosisId = this.personForm.get('diagnosis')?.value;
+
+            if (!diagnosisId) {
+              this.showSnackbar('Por favor, selecciona un diagnóstico antes de continuar.');
+              throw new Error('No se seleccionó diagnóstico');
+            }
+
+            return this.diagnosisService.getDiagnosisByID(diagnosisId).pipe(
+              map((diagnosisData) => {
+                diagnosis.diagnosisPerson.diagnosisCIE = diagnosisData;
+                return diagnosis;  // Pasamos el diagnóstico actualizado para la siguiente operación
+              })
+            );
+          }),
+          switchMap((updatedDiagnosis) => {
+            return this.diagnosisPersonService.updateDiagnosis(updatedDiagnosis, token);
+          })
+        ).subscribe({
+          next: () => this.showSnackbar('Diagnóstico actualizado con éxito'),
+          error: (error) => {
+            console.error('Error durante la actualización:', error);
+            this.showSnackbar('Error al actualizar el diagnóstico');
+          }
+        });
+      }
+    }
+
+
+  private showSnackbar(message: string): void {
+    this.snackBar.open(message, 'Cerrar', { duration: 3000 });
+  }
+
 }

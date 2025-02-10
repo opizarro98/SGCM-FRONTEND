@@ -41,6 +41,13 @@ export class DiagnosisService {
     );
   }
 
+  // Busca un diagnostico por su id
+  getDiagnosisByID(ididagnosis: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}searchDiagnosisForID/${ididagnosis}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An unknown error occurred!';
 
