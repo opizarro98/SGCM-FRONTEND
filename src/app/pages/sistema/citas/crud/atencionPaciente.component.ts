@@ -267,44 +267,64 @@ export class AtencionPacienteDialog {
   }
 
   private processDiagnosis(person: Person, token: string): void {
+    const diagnosisId = this.personForm.get('diagnosis')?.value;
+
     if (!this.tieneDiagnostico) {
-      const diagnosisperson: DiagnosisPerson = {
-        diagnosisCIE: this.personForm.get('diagnosis')?.value,
-        person: person
-      };
-      this.diagnosisPersonService.createDiagnosisPerson(diagnosisperson, token).subscribe({
-        next: () => this.showSnackbar('Diagnóstico registrado con éxito'),
-        error: () => this.showSnackbar('Error al registrar el diagnóstico')
-      });
-    } else {
-        this.diagnosisPersonService.getDiagnosisByPersonIdComplete(person.id, token).pipe(
-          switchMap((diagnosis) => {
-            const diagnosisId = this.personForm.get('diagnosis')?.value;
-
-            if (!diagnosisId) {
-              this.showSnackbar('Por favor, selecciona un diagnóstico antes de continuar.');
-              throw new Error('No se seleccionó diagnóstico');
-            }
-
-            return this.diagnosisService.getDiagnosisByID(diagnosisId).pipe(
-              map((diagnosisData) => {
-                diagnosis.diagnosisPerson.diagnosisCIE = diagnosisData;
-                return diagnosis;  // Pasamos el diagnóstico actualizado para la siguiente operación
-              })
-            );
-          }),
-          switchMap((updatedDiagnosis) => {
-            return this.diagnosisPersonService.updateDiagnosis(updatedDiagnosis, token);
-          })
-        ).subscribe({
-          next: () => this.showSnackbar('Diagnóstico actualizado con éxito'),
-          error: (error) => {
-            console.error('Error durante la actualización:', error);
-            this.showSnackbar('Error al actualizar el diagnóstico');
-          }
-        });
+      if (!diagnosisId) {
+        this.showSnackbar('Por favor, selecciona un diagnóstico antes de continuar.');
+        return;
       }
+
+      // Buscar el diagnóstico antes de crear la relación
+      this.diagnosisService.getDiagnosisByID(diagnosisId).pipe(
+        map((diagnosisData) => {
+          const diagnosisperson: DiagnosisPerson = {
+            diagnosisCIE: diagnosisData,  // Asignar el diagnóstico encontrado
+            person: person
+          };
+
+          return diagnosisperson;
+        }),
+        switchMap((diagnosisperson) => {
+          return this.diagnosisPersonService.createDiagnosisPerson(diagnosisperson, token);
+        })
+      ).subscribe({
+        next: () => this.showSnackbar('Diagnóstico registrado con éxito'),
+        error: (error) => {
+          console.error('Error al registrar el diagnóstico:', error);
+          this.showSnackbar('Error al registrar el diagnóstico');
+        }
+      });
+
+    } else {
+      // Proceso para actualizar el diagnóstico existente
+      this.diagnosisPersonService.getDiagnosisByPersonIdComplete(person.id, token).pipe(
+        switchMap((diagnosis) => {
+          if (!diagnosisId) {
+            this.showSnackbar('Por favor, selecciona un diagnóstico antes de continuar.');
+            throw new Error('No se seleccionó diagnóstico');
+          }
+
+          return this.diagnosisService.getDiagnosisByID(diagnosisId).pipe(
+            map((diagnosisData) => {
+              console.log('Diagnóstico actual:', diagnosisData.nombre);
+              diagnosis.diagnosisPerson.diagnosisCIE = diagnosisData;
+              return diagnosis;
+            })
+          );
+        }),
+        switchMap((updatedDiagnosis) => {
+          return this.diagnosisPersonService.updateDiagnosis(updatedDiagnosis, token);
+        })
+      ).subscribe({
+        next: () => this.showSnackbar('Diagnóstico actualizado con éxito'),
+        error: (error) => {
+          console.error('Error durante la actualización:', error);
+          this.showSnackbar('Error al actualizar el diagnóstico');
+        }
+      });
     }
+  }
 
 
   private showSnackbar(message: string): void {

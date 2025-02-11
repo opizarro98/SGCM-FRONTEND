@@ -80,8 +80,7 @@ export class HistoriaComponent {
         this.diagnosisService.getDiagnosisByPersonId(person.id, token).subscribe({
           next: (diagnosisResponse) => {
             if (diagnosisResponse && diagnosisResponse) {
-              this.diagnosis = diagnosisResponse.diagnosisCIE.code + " - " + diagnosisResponse.diagnosisCIE.name;
-              console.log('Respuesta del servicio de antecedentes:', diagnosisResponse.diagnosisCIE);
+              this.diagnosis = diagnosisResponse.diagnosisPerson.diagnosisCIE.code + " - " + diagnosisResponse.diagnosisPerson.diagnosisCIE.name;
             } else {
               this.diagnosis = "No se encontraron diagnósticos.";
             }

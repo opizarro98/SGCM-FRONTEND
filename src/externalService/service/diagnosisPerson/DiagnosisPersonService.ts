@@ -41,12 +41,12 @@ export class DiagnosisPersonService {
         );
     }
 
-    getDiagnosisByPersonId(personId: string, token: string): Observable<DiagnosisPerson> {
+    getDiagnosisByPersonId(personId: string, token: string): Observable<DiagnosisPersonsIDDTO> {
         const headers = new HttpHeaders({
             'Authorization': `Bearer ${token}`
         });
 
-        return this.http.get<DiagnosisPerson>(`${this.apiUrl}getDiagnosisPersonByPersonId/${personId}`, { headers }).pipe(
+        return this.http.get<DiagnosisPersonsIDDTO>(`${this.apiUrl}getDiagnosisPersonByPersonId/${personId}`, { headers }).pipe(
             tap((response) => {
                 console.log('Respuesta del servicio de antecedentes:', response);
             }),

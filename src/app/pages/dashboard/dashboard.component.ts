@@ -3,97 +3,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import {
-  ApexChart,
-  ChartComponent,
-  ApexDataLabels,
-  ApexLegend,
-  ApexStroke,
-  ApexTooltip,
-  ApexAxisChartSeries,
-  ApexXAxis,
-  ApexYAxis,
-  ApexGrid,
-  ApexPlotOptions,
-  ApexFill,
-  ApexMarkers,
-  ApexResponsive,
-} from 'ng-apexcharts';
 import { AppointmentListDTO } from 'src/externalService/model/appointment/AppintmentListDTO';
 import { PersonListDTO } from 'src/externalService/model/person/PersonListDTO';
 import { AppointmentService } from 'src/externalService/service/appointment/AppointmentService';
+import { AttentionsService } from 'src/externalService/service/attentions/attentionsService';
 import { PersonService } from 'src/externalService/service/person/PersonService';
-
-interface month {
-  value: string;
-  viewValue: string;
-}
-
-export interface salesOverviewChart {
-  series: ApexAxisChartSeries;
-  chart: ApexChart;
-  dataLabels: ApexDataLabels;
-  plotOptions: ApexPlotOptions;
-  yaxis: ApexYAxis;
-  xaxis: ApexXAxis;
-  fill: ApexFill;
-  tooltip: ApexTooltip;
-  stroke: ApexStroke;
-  legend: ApexLegend;
-  grid: ApexGrid;
-  marker: ApexMarkers;
-}
-
-export interface yearlyChart {
-  series: ApexAxisChartSeries;
-  chart: ApexChart;
-  dataLabels: ApexDataLabels;
-  plotOptions: ApexPlotOptions;
-  tooltip: ApexTooltip;
-  stroke: ApexStroke;
-  legend: ApexLegend;
-  responsive: ApexResponsive;
-}
-
-export interface monthlyChart {
-  series: ApexAxisChartSeries;
-  chart: ApexChart;
-  dataLabels: ApexDataLabels;
-  plotOptions: ApexPlotOptions;
-  tooltip: ApexTooltip;
-  stroke: ApexStroke;
-  legend: ApexLegend;
-  responsive: ApexResponsive;
-}
-
-interface stats {
-  id: number;
-  time: string;
-  color: string;
-  title?: string;
-  subtext?: string;
-  link?: string;
-}
-
-export interface productsData {
-  id: number;
-  imagePath: string;
-  uname: string;
-  position: string;
-  productName: string;
-  budget: number;
-  priority: string;
-}
-
-// ecommerce card
-interface productcards {
-  id: number;
-  imgSrc: string;
-  title: string;
-  price: string;
-  rprice: string;
-}
-
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -103,6 +17,10 @@ export class AppDashboardComponent {
   personColumns: string[] = ['avatar', 'identification', 'fullName', 'birth_date', 'occupancy'];
   datapersons = new MatTableDataSource<PersonListDTO>();
   appointments: AppointmentListDTO[] = [];
+  currentyear : number = 0;
+  allAnnualAttentions : string = '';
+
+
 
   token: string | null = null;
 
@@ -113,11 +31,14 @@ export class AppDashboardComponent {
     'assets/images/profile/user-4.jpg'
   ];
 
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  snackBar: any;
 
   constructor(
     private personService: PersonService,
-    private appointmentsService: AppointmentService
+    private appointmentsService: AppointmentService,
+    private attentiosService:  AttentionsService
   ) {
     this.token = localStorage.getItem('token');
   }
@@ -126,7 +47,9 @@ export class AppDashboardComponent {
     this.datapersons.paginator = this.paginator;
     this.loadAllPersons();
     this.loadAppointments();
+    this.getAnnualAttentions();
   }
+
 
   loadAllPersons() {
     this.personService.getPersons().subscribe((persons: PersonListDTO[]) => {
@@ -147,11 +70,32 @@ export class AppDashboardComponent {
 
   loadAppointments(): void {
     this.appointmentsService.getAppointmentsnotAttended().subscribe((data: AppointmentListDTO[]) => {
-      const today = new Date().toISOString().split('T')[0];
+      //const today = new Date().toISOString().split('T')[0];
+      console.log(data)
       this.appointments = data;
-      console.log('DATA ES: ' + this.appointments)
-      console.log(today + 'asdasdadsda LA FECHA ES ')
     });
+  }
+
+
+  getAnnualAttentions(): void {
+
+    if (!this.token) {
+      this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
+      return;
+    }
+      this.attentiosService.getAnnualAttentions(this.token).subscribe({
+    next: (attentionsResponse) => {
+      if (attentionsResponse ) {
+        this.currentyear = attentionsResponse.year;
+        if(attentionsResponse.annualAttentions == 1){
+            this.allAnnualAttentions = attentionsResponse.annualAttentions + ' Atencion';
+        }else{
+            this.allAnnualAttentions = attentionsResponse.annualAttentions + ' Atenciones';
+        }
+        
+      }
+          }
+  });
   }
 
 }
