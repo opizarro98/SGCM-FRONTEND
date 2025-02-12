@@ -45,7 +45,6 @@ export class AntecedentsService {
 
     return this.http.get<Antecedent>(`${this.apiUrl}getAntecedentsByPersonId/${personId}`, { headers }).pipe(
       tap((response) => {
-        console.log('Respuesta del servicio de antecedentes:', response);
       }),
       catchError(this.handleError)
     );

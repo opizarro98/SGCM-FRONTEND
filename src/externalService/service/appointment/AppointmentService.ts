@@ -28,7 +28,6 @@ export class AppointmentService {
 
     return this.http.post<any>(`${this.apiUrl}createNewAppointment`, cita, { headers }).pipe(
       tap((response) => {
-        console.log('appointment created successfully:', response);
       }),
       catchError(this.handleError)
     );
@@ -42,7 +41,6 @@ export class AppointmentService {
     // Incluye el ID como parte de la URL
     return this.http.put<any>(`${this.apiUrl}canceledAppointment/${id}`, null, { headers }).pipe(
       tap((response) => {
-        console.log('Appointment canceled successfully:', response);
       }),
       catchError(this.handleError)
     );
@@ -56,7 +54,6 @@ export class AppointmentService {
     // Incluye el ID como parte de la URL
     return this.http.put<any>(`${this.apiUrl}attendedAppointment/${id}`, null, { headers }).pipe(
       tap((response) => {
-        console.log('Appointment canceled successfully:', response);
       }),
       catchError(this.handleError)
     );

@@ -20,7 +20,6 @@ export class DiagnosisPersonService {
 
         return this.http.post<any>(`${this.apiUrl}createNewDiagnosis`, cita, { headers }).pipe(
             tap((response) => {
-                console.log('se creo con exito el diagnostico de la persona ' + response)
             }),
             catchError(this.handleError)
 
@@ -34,7 +33,6 @@ export class DiagnosisPersonService {
 
         return this.http.put<any>(`${this.apiUrl}updateDiagnosis`, cita, { headers }).pipe(
             tap((response) => {
-                console.log('se creo con exito el diagnostico de la persona ' + response)
             }),
             catchError(this.handleError)
 
@@ -48,7 +46,6 @@ export class DiagnosisPersonService {
 
         return this.http.get<DiagnosisPersonsIDDTO>(`${this.apiUrl}getDiagnosisPersonByPersonId/${personId}`, { headers }).pipe(
             tap((response) => {
-                console.log('Respuesta del servicio de antecedentes:', response);
             }),
             catchError(this.handleError)
         );
@@ -60,7 +57,6 @@ export class DiagnosisPersonService {
         });
         return this.http.get<DiagnosisPersonsIDDTO>(`${this.apiUrl}getDiagnosisPersonByPersonId/${personId}`, { headers }).pipe(
             tap((response) => {
-                console.log('Respuesta del servicio de antecedentes:', response);
             }),
             catchError(this.handleError)
         );

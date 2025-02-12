@@ -8,6 +8,7 @@ import { PersonListDTO } from 'src/externalService/model/person/PersonListDTO';
 import { AppointmentService } from 'src/externalService/service/appointment/AppointmentService';
 import { AttentionsService } from 'src/externalService/service/attentions/attentionsService';
 import { PersonService } from 'src/externalService/service/person/PersonService';
+import {AtencionPacienteDialog} from '../sistema/citas/crud/atencionPaciente.component';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -38,7 +39,8 @@ export class AppDashboardComponent {
   constructor(
     private personService: PersonService,
     private appointmentsService: AppointmentService,
-    private attentiosService:  AttentionsService
+    private attentiosService:  AttentionsService,
+    private dialog:MatDialog
   ) {
     this.token = localStorage.getItem('token');
   }
@@ -70,8 +72,6 @@ export class AppDashboardComponent {
 
   loadAppointments(): void {
     this.appointmentsService.getAppointmentsnotAttended().subscribe((data: AppointmentListDTO[]) => {
-      //const today = new Date().toISOString().split('T')[0];
-      console.log(data)
       this.appointments = data;
     });
   }
@@ -88,14 +88,28 @@ export class AppDashboardComponent {
       if (attentionsResponse ) {
         this.currentyear = attentionsResponse.year;
         if(attentionsResponse.annualAttentions == 1){
-            this.allAnnualAttentions = attentionsResponse.annualAttentions + ' Atencion';
+            this.allAnnualAttentions = attentionsResponse.annualAttentions + ' - Atención';
         }else{
-            this.allAnnualAttentions = attentionsResponse.annualAttentions + ' Atenciones';
+            this.allAnnualAttentions = attentionsResponse.annualAttentions + ' - Atenciones';
         }
         
       }
           }
   });
+  }
+
+    // Método para iniciar una atencion
+  atenderCita(personIdentification: string, reasonAppointment:  string, idappointment: string) {
+    const dialogRef = this.dialog.open(AtencionPacienteDialog, {
+      data: { identification: personIdentification, reason:  reasonAppointment, id: idappointment } 
+    });
+
+    // Escuchar el resultado del diálogo, si es necesario
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadAppointments();
+      }
+    });
   }
 
 }

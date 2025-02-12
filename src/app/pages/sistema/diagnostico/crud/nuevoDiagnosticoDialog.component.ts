@@ -70,11 +70,9 @@ export class NuevoDiagnosticoDialog {
   }
 
   ngOnInit(): void {
-    console.log('cargo las categorias');
     this.categoryService.getCategory().subscribe({
       next: (data) => {
         this.categories = data;
-        console.log(data); // Asegúrate de que los datos se impriman aquí
         this.cdr.detectChanges(); // Forzar la actualización de la vista
       },
       error: (err) => {

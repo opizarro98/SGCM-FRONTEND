@@ -23,7 +23,6 @@ export class AttentionsService {
 
     return this.http.post<any>(`${this.apiUrl}createNewAtention`, Attention, { headers }).pipe(
       tap((response) => {
-        console.log('Attention created successfully:', response);
       }),
       catchError(this.handleError)
     );
@@ -38,7 +37,6 @@ export class AttentionsService {
 
     return this.http.get<AnnualAttentionDTO>(`${this.apiUrl}getAllAttentiononYear`, { headers }).pipe(
         tap((response) => {
-            console.log('Respuesta del servicio de antecedentes:', response);
         }),
         catchError(this.handleError)
     );
@@ -53,7 +51,6 @@ export class AttentionsService {
 
     return this.http.get<AttentionWithMonthDTO[]>(`${this.apiUrl}annualAttendanceToMonth`, { headers }).pipe(
       tap((response) => {
-        console.log('Respuesta del servicio de atenciones:', response);
       }),
       catchError(this.handleError)
     );

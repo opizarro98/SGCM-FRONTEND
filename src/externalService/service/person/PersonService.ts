@@ -27,7 +27,6 @@ export class PersonService {
 
     return this.http.post<any>(`${this.apiUrl}createNewPerson`, person, { headers }).pipe(
       tap((response) => {
-        console.log('Person created successfully:', response);
       }),
       catchError(this.handleError)
     );
@@ -37,7 +36,6 @@ export class PersonService {
   getPersonByIdentification(identification: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}searchPersonByIdentification/${identification}`).pipe(
       tap((response) => {
-        console.log('Person find successfully:', response);
       }),
       catchError(this.handleError)
     );
@@ -51,7 +49,6 @@ export class PersonService {
 
       return this.http.post<any>(`${this.apiUrl}updatePerson`, person, { headers }).pipe(
         tap((response) => {
-          console.log('Person update successfully:', response);
         }),
         catchError(this.handleError)
       );

@@ -28,7 +28,6 @@ export class DiagnosisService {
 
     return this.http.post<any>(`${this.apiUrl}createNewDiagnosis`, diagnosis, { headers }).pipe(
       tap((response) => {
-        console.log('Diagnosis created successfully:', response);
       }),
       catchError(this.handleError)
     );

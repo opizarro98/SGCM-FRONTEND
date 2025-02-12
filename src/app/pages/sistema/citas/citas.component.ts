@@ -35,7 +35,6 @@ export class CitasComponent implements AfterViewInit {
 
   loadAppointments() {
     this.appointmentsService.getAppointments().subscribe((appointments) => {
-      console.log('Citas cargadas:', appointments);
       this.dataSource.data = appointments;
     });
   }

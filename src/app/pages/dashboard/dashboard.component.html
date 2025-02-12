@@ -73,9 +73,10 @@
               <span class="mat-subtitle-1 f-s-14 lh-20 f-w-600 d-block">
                 {{ appointment.patientname }}
               </span>
-            </div>
+            </div>            
+            
             <div class="actions">
-              <button mat-button color="primary">
+              <button mat-button color="primary" (click)="atenderCita(appointment.identification, appointment.reason, appointment.id)">
                 Atender
               </button>
             </div>

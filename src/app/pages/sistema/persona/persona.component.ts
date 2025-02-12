@@ -55,7 +55,6 @@ export class PersonaComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loadAllPersons();
-        console.log("Persona actualizada");
       }
     });
   }

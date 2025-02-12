@@ -22,7 +22,6 @@ export class HistoryService {
     });
     return this.http.post<any>(`${this.apiUrl}createNewHistory`, history, { headers }).pipe(
       tap((response) => {
-        console.log('History created successfully:', response);
       }),
       catchError(this.handleError)
     );

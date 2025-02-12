@@ -307,7 +307,6 @@ export class AtencionPacienteDialog {
 
           return this.diagnosisService.getDiagnosisByID(diagnosisId).pipe(
             map((diagnosisData) => {
-              console.log('Diagnóstico actual:', diagnosisData.nombre);
               diagnosis.diagnosisPerson.diagnosisCIE = diagnosisData;
               return diagnosis;
             })

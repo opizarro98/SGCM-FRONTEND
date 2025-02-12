@@ -6,11 +6,11 @@ import { Component } from '@angular/core';
     <div class="branding">
       <a href="/">
         <img
-          src="./assets/images/logos/logosf.png"
+          src="./assets/images/logos/logosf2.png"
           class="align-middle m-2"
           alt="logo"
-          width="140px"
-          height="60px"
+          width="190px"
+          height="100px"
         />
       </a>
     </div>

@@ -30,7 +30,6 @@ export class CategoryService {
 
     return this.http.post<Category>(`${this.apiUrl}createNewCategories`, category, { headers }).pipe(
       tap((response) => {
-        console.log('Categoría creada exitosamente:', response);
       }),
       catchError(this.handleError)
     );

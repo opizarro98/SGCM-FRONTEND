@@ -57,7 +57,6 @@ export class NuevaCategoriaDialog {
   }
   
   onSubmit() {
-    console.log('Formulario enviado');
     if (!this.token) {
       this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
       return;
@@ -69,11 +68,9 @@ export class NuevaCategoriaDialog {
       name: this.categoryForm.get('nombre')?.value,
     };
 
-    console.log('Datos a enviar:', newCategory);
 
     this.categoryService.createNewCategory(newCategory, this.token).pipe(
       switchMap((response) => {
-        console.log('Respuesta de la API al crear categoría:', response);
         this.snackBar.open('Categoria creada con éxito.', 'Cerrar', { duration: 3000 });
         return this.categoryService.getCategoryByCode(newCategory.code);
       }),
@@ -84,7 +81,6 @@ export class NuevaCategoriaDialog {
         return of(null);
       })
     ).subscribe((data) => {
-      console.log('Datos obtenidos tras crear la categoría:', data);
       this.dialogRef.close(true);
     });
   }

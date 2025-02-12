@@ -22,10 +22,21 @@ export class HeaderComponent {
   @Output() toggleCollapsed = new EventEmitter<void>();
 
   showFiller = false;
+  userName: string = '';
 
   logout(){
     this.loginService.logout();
   }
 
-  constructor(public dialog: MatDialog, private loginService: LoginService) {}
+  
+
+  constructor(public dialog: MatDialog, private loginService: LoginService) {
+
+  }
+
+   ngOnInit() {
+    this.loginService.userName.subscribe(name => {
+      this.userName = 'Bienvenida - '+name;
+    });
+  }
 }
