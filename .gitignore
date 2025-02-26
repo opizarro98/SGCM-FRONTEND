@@ -4,4 +4,4 @@ sistema/package-lock.json
 .vscode
 node_modules
 .angular
-
+dist

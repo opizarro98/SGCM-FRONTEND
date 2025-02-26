@@ -108,6 +108,7 @@ export class AppDashboardComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loadAppointments();
+        this.getAnnualAttentions()
       }
     });
   }
