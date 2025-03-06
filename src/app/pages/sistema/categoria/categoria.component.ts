@@ -13,7 +13,7 @@ import { CategoryService } from 'src/externalService/service/category/CategorySe
   templateUrl: './categoria.component.html',
 })
 export class CategoriaComponent {
-  displayedColumns: string[] = ['id', 'code', 'name', 'actions'];
+  displayedColumns: string[] = ['id', 'code', 'name'];
   dataSource = new MatTableDataSource<Category>();
 
   // Mapeo para los filtros de cada columna
