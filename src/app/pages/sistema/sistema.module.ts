@@ -16,10 +16,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { CategoriaComponent } from './categoria/categoria.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 
 @NgModule({
@@ -38,6 +42,11 @@ import { CategoriaComponent } from './categoria/categoria.component';
     MatDividerModule,
     MatPaginatorModule,
     MatIconModule,
+    MatSelectModule,
+    MatAutocompleteModule,
+    MatOptionModule,  // Asegúrate de agregar este módulo
+    MatInputModule,
+    MatFormFieldModule
   ],
   declarations: [
     CitasComponent,

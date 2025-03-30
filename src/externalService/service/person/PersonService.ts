@@ -53,6 +53,13 @@ export class PersonService {
         catchError(this.handleError)
       );
     }
+
+
+  getPersonByName(nombre: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}buscar?nombre=${nombre}`);
+  }
+
+
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An unknown error occurred!';
 
