@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  urlHost:'http://localhost:8081/api/',
-  urlApi: '/http://localhost:8081/api/auth/',
+  urlHost:'/api/',
+  urlApi: '/api/auth/',
   userId:1
 };
