@@ -12,16 +12,15 @@
                     <mat-card-header class="d-flex flex-column align-items-start">
                         <!-- Input de cédula -->
                         <div class="row w-100">
-                            <mat-form-field appearance="outline" class="example-full-width col-sm-8">
-                                <mat-label>Buscar paciente</mat-label>
-                                <input matInput placeholder="Ingrese la cédula del paciente"
-                                    [(ngModel)]="identification">
+                            <mat-form-field appearance="outline" class="w-100" color="primary">
+                                <mat-label>Ingrese el nombre del paciente</mat-label>
+                                <input matInput (input)="buscarPorNombre()" [matAutocomplete]="auto" [(ngModel)]="nombre" />
+                                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="seleccionarPersona($event)">
+                                    <mat-option *ngFor="let persona of personasFiltradas" [value]="persona">
+                                        {{ persona.firstName }} {{ persona.lastName }}
+                                    </mat-option>
+                                </mat-autocomplete>
                             </mat-form-field>
-                            <button mat-stroked-button color="primary" class="col-md-3 buscar-btn"
-                                (click)="buscarPaciente()">
-                                <i-tabler class="routeIcon" name="Search" matListItemIcon></i-tabler>
-                                Buscar
-                            </button>
                         </div>
 
                         <!-- Título -->

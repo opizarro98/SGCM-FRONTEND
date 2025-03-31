@@ -4,18 +4,21 @@ import { AntecedentsService } from 'src/externalService/service/antecedets/antec
 import { DiagnosisService } from 'src/externalService/service/diagnosis/DiagnosisService';
 import { DiagnosisPersonService } from 'src/externalService/service/diagnosisPerson/DiagnosisPersonService';
 import { PersonService } from 'src/externalService/service/person/PersonService';
+import {Person} from 'src/externalService/model/person/Person';
+import {debounceTime, distinctUntilChanged} from 'rxjs';
 
 @Component({
   selector: 'app-historia',
   templateUrl: './historia.component.html',
 })
 export class HistoriaComponent {
-  identification: string = '';
+  nombre: string = '';
   paciente: any = null; // Aquí se guarda el paciente buscado
   token: string | null = null;
   attentions: any[] = []; // Lista de atenciones para el acordeón
   diagnosis: string = ''; // Diagnóstico actual
   antecedentes: string = ''; // Antecedentes actuales
+    personasFiltradas: any[] = [];
 
   constructor(
     private personService: PersonService,
@@ -37,15 +40,39 @@ export class HistoriaComponent {
     return age;
   }
 
-  buscarPaciente() {
-    if (!this.identification) {
+    buscarPorNombre() {
+      console.log('ingresa a la busqeuda por nombre')
+    const nombre = this.nombre; // Evita undefined
+    if (nombre.length > 2) {
+      this.personService.getPersonByName(nombre).pipe(
+        debounceTime(300),
+        distinctUntilChanged()
+      ).subscribe((data: any) => {
+        this.personasFiltradas = data || [];  
+        console.log(this.personasFiltradas);
+      });
+    }
+  }
+
+
+  seleccionarPersona(event: any) {
+    const personaSeleccionada: Person = event.option.value;
+    if (personaSeleccionada) {
+      this.nombre = personaSeleccionada.firstName + " "+ personaSeleccionada.lastName;
+      this.buscarPaciente(personaSeleccionada.identification);
+    }
+  }
+
+  buscarPaciente(identificacion : string) {
+    if (!this.nombre) {
       console.error('La cédula no puede estar vacía');
       return;
     }
 
     const token = this.token || ''; // Obtener el token
+    console.log(' la cedual es: ' + identificacion);
 
-    this.personService.getPersonByIdentification(this.identification).subscribe({
+    this.personService.getPersonByIdentification(identificacion).subscribe({
       next: (person) => {
         // Construir el objeto paciente
         this.paciente = {

@@ -13,12 +13,10 @@ import {AppointmentService} from 'src/externalService/service/appointment/Appoin
 import {PersonService} from 'src/externalService/service/person/PersonService';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Person} from 'src/externalService/model/person/Person';
-import {CommonModule, formatDate} from '@angular/common';
+import {CommonModule} from '@angular/common';
 import {Appointment} from 'src/externalService/model/appointment/Appointment';
-import { ClinicHistorie } from 'src/externalService/model/history/ClinicHistorie';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { HistoryService } from 'src/externalService/service/history/HistoryService';
-import { PersonSearchName } from 'src/externalService/model/person/PersonSearchName';
 import {MatSelectModule} from '@angular/material/select';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
@@ -121,105 +119,7 @@ export class NuevaCitaDialog {
     }
   }
 
-  /*buscarPersona() {
-    const cedula = this.citaForm.get('cedula')?.value;
-      if (!this.token) {
-      this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
-      return;
-    }
-    
-    this.personService.getPersonByIdentification(cedula).subscribe({
-      next: (person: Person) => {
-        // Usuario encontrado, llenamos el formulario
-        this.foundPerson = person;
-        this.isUserRegistered = true;
-        this.citaForm.patchValue({
-          nombre: person.firstName,
-          apellido: person.lastName,
-          fechaNacimiento: person.birthDate,
-          ocupacion: person.occupancy,
-          fecha: new Date(),
-          motivoConsulta: ''
-        });
-        
-      },
-      error: (error) => {
-         this.isUserRegistered = false;
-          this.snackBar.open(error, 'Cerrar', { duration: 3000 });
-          this.isFormEnabled =true;
-          this.citaForm.enable();
-          this.snackBar.open('Usuario no registrado', 'Cerrar', { duration: 3000 });
-          this.foundPerson = null;
-      }
-    });
-  }*/
-
-  /*onSubmit() {
-    if (!this.token) {
-      this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
-      return;
-    }
-
-    const cedula = this.citaForm.get('cedula')?.value;
-    console.log('cedula es: ' + cedula)
-
-    // Si la persona ya está registrada, solo rellenamos los campos del formulario
-    if (this.isUserRegistered && this.foundPerson) {
-      this.snackBar.open('Persona encontrada. Rellenando datos del formulario...', 'Cerrar', { duration: 3000 });
-      this.citaForm.patchValue({
-        id: this.foundPerson.id,
-        nombre: this.foundPerson.firstName,
-        apellido: this.foundPerson.lastName,
-        fechaNacimiento: this.foundPerson.birthDate,
-        ocupacion: this.foundPerson.occupancy,
-      });
-
-      // Registrar la cita con la persona encontrada
-      this.registrarCita(this.foundPerson);
-    } else {
-      // Si la persona no está registrada, creamos una nueva
-      const newPerson: Person = {
-        id: '',
-        identification: cedula,
-        firstName: this.citaForm.get('nombre')?.value,
-        lastName: this.citaForm.get('apellido')?.value,
-        birthDate: formatDate(this.citaForm.get('fechaNacimiento')?.value, 'yyyy-MM-dd', "en-US"),
-        occupancy: this.citaForm.get('ocupacion')?.value
-      };
-
-      this.personService.createPerson(newPerson, this.token).pipe(
-        switchMap(() => {
-          this.snackBar.open('Paciente creado con éxito.', 'Cerrar', { duration: 3000 });
-          return this.personService.getPersonByIdentification(newPerson.identification);
-        }),
-        switchMap((personfind) => {
-          if (!this.token) {
-            this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
-            throw new Error('Token no encontrado');
-          }
-          const clinicHistory: ClinicHistorie = {
-            id: '',
-            person: personfind
-          };
-          return this.historyService.createNewHistory(clinicHistory, this.token);
-        })
-      ).subscribe({
-        next: (personfind) => {
-          this.snackBar.open('Cita medica creada con éxito.', 'Cerrar', { duration: 3000 });
-
-          // Registrar la cita con la persona creada
-          this.registrarCita(personfind);
-
-          this.dialogRef.close(true); // Cierra el diálogo tras éxito
-        },
-        error: (err) => {
-          this.snackBar.open('Error al procesar la solicitud: ' + err.message, 'Cerrar', { duration: 3000 });
-        }
-      });
-    }
-  }*/
-
-  
+ 
   onSubmit() {
     if (!this.token) {
       this.snackBar.open('Error: token no encontrado. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 3000 });
