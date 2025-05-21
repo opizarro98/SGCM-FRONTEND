@@ -32,7 +32,7 @@ export class AppSideLoginComponent {
         
         next: (userData) => {
           localStorage.setItem('authentication', userData);
-          console.log(userData);
+          //console.log(userData);
           this.router.navigateByUrl('/dashboard');
         },
         error: (errorData) => {
